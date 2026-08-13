@@ -1,7 +1,6 @@
 package com.prioritycaller.app
 
 import android.content.Context
-import android.telephony.PhoneNumberUtils
 
 /**
  * Stores MULTIPLE priority contacts. Each contact is serialized as:
@@ -58,14 +57,28 @@ object ContactPrefs {
     /** True if the incoming number belongs to ANY saved priority contact. */
     fun isPriorityNumber(context: Context, incomingNumber: String?): Boolean {
         if (incomingNumber.isNullOrBlank()) return false
-        val target = normalize(incomingNumber)
         return getAllContacts(context).any { contact ->
-            contact.numbers.any { saved ->
-                PhoneNumberUtils.compare(saved, target) || saved == target
-            }
+            contact.numbers.any { saved -> numbersMatch(saved, incomingNumber) }
         }
     }
 
     private fun normalize(number: String): String =
         number.replace(Regex("[^0-9+]"), "")
+
+    private const val MIN_MATCHING_DIGITS = 7
+
+    /**
+     * Right-aligned digit comparison, tolerant of country-code / formatting differences
+     * between two numbers (e.g. "+15551234567" vs "(555) 123-4567"). Replaces the
+     * platform's PhoneNumberUtils.compare(), which is deprecated with no in-platform
+     * replacement, by mirroring its own right-aligned suffix-matching approach.
+     */
+    internal fun numbersMatch(a: String, b: String): Boolean {
+        val digitsA = a.filter(Char::isDigit)
+        val digitsB = b.filter(Char::isDigit)
+        if (digitsA.isEmpty() || digitsB.isEmpty()) return false
+        val overlap = minOf(digitsA.length, digitsB.length)
+        if (overlap < MIN_MATCHING_DIGITS) return digitsA == digitsB
+        return digitsA.takeLast(overlap) == digitsB.takeLast(overlap)
+    }
 }

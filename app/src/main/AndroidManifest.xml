@@ -4,9 +4,8 @@
     <!-- Read the address book to pick the priority contact -->
     <uses-permission android:name="android.permission.READ_CONTACTS" />
 
-    <!-- Needed to inspect call state / numbers on some OEM builds -->
+    <!-- Needed to detect when a ringing priority call is answered or ends -->
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
-    <uses-permission android:name="android.permission.READ_CALL_LOG" />
 
     <!-- Required to read/override Do Not Disturb policy -->
     <uses-permission android:name="android.permission.ACCESS_NOTIFICATION_POLICY" />

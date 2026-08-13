@@ -57,7 +57,6 @@ class MainActivity : AppCompatActivity() {
             arrayOf(
                 android.Manifest.permission.READ_CONTACTS,
                 android.Manifest.permission.READ_PHONE_STATE,
-                android.Manifest.permission.READ_CALL_LOG,
                 android.Manifest.permission.POST_NOTIFICATIONS
             )
         )
@@ -281,7 +280,7 @@ class MainActivity : AppCompatActivity() {
 
         binding.tvStatus.text = "DND access: ${if (dndGranted) "granted" else "NOT granted"}\n" +
             "Call screening role: ${if (roleGranted) "granted" else "NOT granted"}\n" +
-            "Complete steps 1-5 above, in order, then leave the app installed and " +
-            "whitelisted in the background. Test with a real call once done."
+            "Complete the steps above, in order, then leave the app and " +
+            "test with a real call once done."
     }
 }

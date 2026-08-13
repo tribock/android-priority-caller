@@ -19,7 +19,7 @@ class CallScreeningServiceImpl : CallScreeningService() {
         val matchedContact = ContactPrefs.getAllContacts(applicationContext)
             .firstOrNull { contact ->
                 contact.numbers.any { saved ->
-                    android.telephony.PhoneNumberUtils.compare(saved, number ?: "")
+                    ContactPrefs.numbersMatch(saved, number ?: "")
                 }
             }
 
