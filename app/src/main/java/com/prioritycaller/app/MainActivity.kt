@@ -11,15 +11,21 @@ import android.os.Build
 import android.os.Bundle
 import android.provider.ContactsContract
 import android.provider.Settings
+import android.view.Gravity
+import android.view.View
+import android.widget.ImageButton
+import android.widget.LinearLayout
+import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import com.prioritycaller.app.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
+    private var contactsExpanded = false
 
     private val pickContactLauncher =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
@@ -47,7 +53,6 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        // Ask for the basic runtime permissions up front.
         requestPermissionsLauncher.launch(
             arrayOf(
                 android.Manifest.permission.READ_CONTACTS,
@@ -62,7 +67,14 @@ class MainActivity : AppCompatActivity() {
         binding.btnDndAccess.setOnClickListener { requestDndAccess() }
         binding.btnMiuiAutostart.setOnClickListener { openMiuiAutostartSettings() }
         binding.btnMiuiBattery.setOnClickListener { openMiuiBatterySettings() }
+        binding.contactsSectionHeader.setOnClickListener {
+            contactsExpanded = !contactsExpanded
+            applyContactsExpandedState(animate = true)
+        }
 
+        contactsExpanded = ContactPrefs.getAllContacts(this).isNotEmpty()
+        applyContactsExpandedState(animate = false)
+        refreshContactList()
         refreshStatus()
     }
 
@@ -79,8 +91,6 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun readContact(contactUri: Uri) {
-        // The picked URI points at a single phone row; resolve the contact ID
-        // then pull EVERY number for that contact (mobile/home/work/etc).
         var contactId: String? = null
         var displayName: String? = null
 
@@ -119,12 +129,77 @@ class MainActivity : AppCompatActivity() {
             return
         }
 
-        ContactPrefs.saveContact(this, displayName ?: "Unknown", numbers)
-        refreshStatus()
-        Toast.makeText(this, "Priority contact saved: $displayName", Toast.LENGTH_SHORT).show()
+        ContactPrefs.addContact(this, displayName ?: "Unknown", numbers)
+        refreshContactList()
+        Toast.makeText(this, "Added: $displayName", Toast.LENGTH_SHORT).show()
     }
 
-    // ---------- Call screening role (required for CallScreeningService to fire) ----------
+    // ---------- Contact list UI ----------
+
+    private fun applyContactsExpandedState(animate: Boolean) {
+        binding.contactListSection.visibility = if (contactsExpanded) View.VISIBLE else View.GONE
+        val targetRotation = if (contactsExpanded) 180f else 0f
+        if (animate) {
+            binding.ivExpandContacts.animate().rotation(targetRotation).setDuration(200).start()
+        } else {
+            binding.ivExpandContacts.rotation = targetRotation
+        }
+    }
+
+    private fun dp(value: Int): Int = (value * resources.displayMetrics.density).toInt()
+
+    private fun refreshContactList() {
+        binding.contactListContainer.removeAllViews()
+        val contacts = ContactPrefs.getAllContacts(this)
+
+        binding.tvContactCount.text = contacts.size.toString()
+        binding.tvContactCount.visibility = if (contacts.isEmpty()) View.GONE else View.VISIBLE
+
+        if (contacts.isEmpty()) {
+            val empty = TextView(this).apply {
+                text = getString(R.string.no_priority_contacts)
+                textSize = 14f
+                setTextColor(ContextCompat.getColor(this@MainActivity, R.color.md_on_surface_variant))
+                setPadding(0, dp(4), 0, dp(4))
+            }
+            binding.contactListContainer.addView(empty)
+            return
+        }
+
+        for (contact in contacts) {
+            val row = LinearLayout(this).apply {
+                orientation = LinearLayout.HORIZONTAL
+                gravity = Gravity.CENTER_VERTICAL
+                background = ContextCompat.getDrawable(this@MainActivity, R.drawable.bg_contact_row)
+                setPadding(dp(14), dp(10), dp(10), dp(10))
+                layoutParams = LinearLayout.LayoutParams(
+                    LinearLayout.LayoutParams.MATCH_PARENT,
+                    LinearLayout.LayoutParams.WRAP_CONTENT
+                ).apply { bottomMargin = dp(8) }
+            }
+            val label = TextView(this).apply {
+                text = contact.name
+                textSize = 15f
+                setTextColor(ContextCompat.getColor(this@MainActivity, R.color.md_on_surface))
+                layoutParams = LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f)
+            }
+            val removeBtn = ImageButton(this).apply {
+                setImageResource(R.drawable.ic_close)
+                contentDescription = getString(R.string.remove_contact_cd, contact.name)
+                background = null
+                setColorFilter(ContextCompat.getColor(this@MainActivity, R.color.md_on_surface_variant))
+                setOnClickListener {
+                    ContactPrefs.removeContact(this@MainActivity, contact)
+                    refreshContactList()
+                }
+            }
+            row.addView(label)
+            row.addView(removeBtn)
+            binding.contactListContainer.addView(row)
+        }
+    }
+
+    // ---------- Call screening role ----------
 
     private fun requestCallScreeningRole() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
@@ -155,7 +230,7 @@ class MainActivity : AppCompatActivity() {
         startActivity(Intent(Settings.ACTION_NOTIFICATION_POLICY_ACCESS_SETTINGS))
     }
 
-    // ---------- MIUI-specific screens (best-effort; layouts vary by MIUI version) ----------
+    // ---------- MIUI-specific screens ----------
 
     private fun openMiuiAutostartSettings() {
         try {
@@ -183,7 +258,6 @@ class MainActivity : AppCompatActivity() {
             }
             startActivity(intent)
         } catch (e: ActivityNotFoundException) {
-            // Fallback: generic Android battery optimization screen
             val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS).apply {
                 data = Uri.parse("package:$packageName")
             }
@@ -199,13 +273,6 @@ class MainActivity : AppCompatActivity() {
     // ---------- Status text ----------
 
     private fun refreshStatus() {
-        val name = ContactPrefs.getContactName(this)
-        binding.tvSelectedContact.text = if (name != null) {
-            "Priority contact: $name"
-        } else {
-            "No priority contact selected"
-        }
-
         val nm = getSystemService(NotificationManager::class.java)
         val dndGranted = nm.isNotificationPolicyAccessGranted
         val roleGranted = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {

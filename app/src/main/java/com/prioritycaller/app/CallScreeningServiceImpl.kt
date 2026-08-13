@@ -1,5 +1,6 @@
 package com.prioritycaller.app
 
+import android.content.Intent
 import android.telecom.Call
 import android.telecom.CallScreeningService
 import androidx.core.content.ContextCompat
@@ -15,15 +16,20 @@ class CallScreeningServiceImpl : CallScreeningService() {
     override fun onScreenCall(callDetails: Call.Details) {
         val number = callDetails.handle?.schemeSpecificPart
 
-        val isPriority = ContactPrefs.isPriorityNumber(applicationContext, number)
+        val matchedContact = ContactPrefs.getAllContacts(applicationContext)
+            .firstOrNull { contact ->
+                contact.numbers.any { saved ->
+                    android.telephony.PhoneNumberUtils.compare(saved, number ?: "")
+                }
+            }
 
-        if (isPriority) {
-            val serviceIntent = android.content.Intent(this, RingtonePlayerService::class.java)
+        if (matchedContact != null) {
+            val serviceIntent = Intent(this, RingtonePlayerService::class.java).apply {
+                putExtra("contact_name", matchedContact.name)
+            }
             ContextCompat.startForegroundService(this, serviceIntent)
         }
 
-        // Always allow the call through untouched — we are only overriding volume/DND,
-        // never screening/blocking the call itself.
         val response = CallResponse.Builder()
             .setDisallowCall(false)
             .setRejectCall(false)

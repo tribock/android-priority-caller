@@ -1,4 +1,18 @@
 <resources>
     <string name="app_name">Priority Caller</string>
-    <color name="ic_launcher_background">#1565C0</color>
+    <string name="app_subtitle">Never miss the calls that matter</string>
+
+    <string name="priority_contacts_title">Priority contacts</string>
+    <string name="expand_contacts_cd">Expand priority contacts</string>
+    <string name="add_priority_contact">Add priority contact</string>
+    <string name="no_priority_contacts">No priority contacts yet</string>
+    <string name="remove_contact_cd">Remove %1$s</string>
+
+    <string name="setup_title">Setup</string>
+    <string name="step_call_screening">Grant Call Screening role</string>
+    <string name="step_dnd_access">Grant Do Not Disturb access</string>
+    <string name="step_miui_autostart">Open Autostart settings</string>
+    <string name="step_miui_battery">Open Battery saver settings</string>
+
+    <string name="status_title">Status</string>
 </resources>

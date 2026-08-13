@@ -45,7 +45,10 @@ class RingtonePlayerService : Service() {
         createNotificationChannel()
     }
 
+    private var currentCallerName: String = "Priority contact"
+
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
+        currentCallerName = intent?.getStringExtra("contact_name") ?: "Priority contact"
         startForeground(NOTIFICATION_ID, buildNotification())
         boostRingVolume()
         startLoopingRingtone()
@@ -191,12 +194,10 @@ class RingtonePlayerService : Service() {
             nm.createNotificationChannel(channel)
         }
     }
-
     private fun buildNotification(): Notification {
-        val name = ContactPrefs.getContactName(applicationContext) ?: "Priority contact"
         return NotificationCompat.Builder(this, CHANNEL_ID)
             .setContentTitle("Incoming priority call")
-            .setContentText("$name is calling — ringing at max volume")
+            .setContentText("$currentCallerName is calling — ringing at max volume")
             .setSmallIcon(android.R.drawable.sym_call_incoming)
             .setPriority(NotificationCompat.PRIORITY_MAX)
             .setCategory(NotificationCompat.CATEGORY_CALL)

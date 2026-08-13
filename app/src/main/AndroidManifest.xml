@@ -13,7 +13,7 @@
 
     <!-- Foreground service that plays the ringtone while a priority call is ringing -->
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
-    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_PHONE_CALL" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_SPECIAL_USE" />
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
 
     <!-- Lets the app draw a full-screen "priority call" alert over the lock screen -->
@@ -24,7 +24,7 @@
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
-        android:theme="@style/Theme.Material3.DayNight.NoActionBar"
+        android:theme="@style/Theme.PriorityCaller"
         android:supportsRtl="true">
 
         <activity
@@ -50,11 +50,18 @@
             </intent-filter>
         </service>
 
-        <!-- Foreground service: plays the looping ringtone at max volume -->
+        <!-- Foreground service: plays the looping ringtone at max volume.
+             Uses "specialUse" because this service doesn't act as a dialer/ConnectionService
+             (which "phoneCall" requires, along with the MANAGE_OWN_CALLS permission we don't hold) —
+             it just rings a notification/sound while a priority contact's call comes in. -->
         <service
             android:name=".RingtonePlayerService"
             android:exported="false"
-            android:foregroundServiceType="phoneCall" />
+            android:foregroundServiceType="specialUse">
+            <property
+                android:name="android.app.PROPERTY_SPECIAL_USE_FGS_SUBTYPE"
+                android:value="Rings a loud alert when a priority contact calls" />
+        </service>
 
     </application>
 </manifest>
