@@ -21,13 +21,23 @@ the call and an alarm-stream ringtone to make sure it's heard.
 3. Connect the phone via USB and accept the "Allow USB debugging" prompt.
 4. Select the phone as the run target and click **Run ▶**.
 
-### Download apk from Releases
+### Download apk from Releases and install directly on the Mobile Device
 
-1. Download APK from github Release (e.g.: [GitHub Release v0.0.1](https://github.com/tribock/android-priority-caller/releases/download/v0.0.1/app-release.apk))
+1. Download APK from github Release (e.g.: [GitHub Release v0.0.1](https://github.com/tribock/android-priority-caller/releases/download/v0.0.1/app-release.apk)).
+2. Tap `app-release.apk` in your Downloads folder.
+3. When the blue/gray Google Play Protect warning pops up, do not click OK.
+4. Click `More details`.  
+<img src="doc/images/more_details.png" alt="More details install screenshot" width="150" />
+5. Tap the small text link that says "Install anyway" directly above the OK button.  
+<img src="doc/images/install_anyway.png" alt="Install anyway screenshot" width="150" />
+
+### Download apk from Releases and install using a Computer
+
+1. Download APK from github Release (e.g.: [GitHub Release v0.0.1](https://github.com/tribock/android-priority-caller/releases/download/v0.0.1/app-release.apk)).
 2. Connect the Phone to your Computer and enable Debugging as described above.
-3. Install adb ( [Android Debug Bridge](https://developer.android.com/tools/adb))
-4. Check if Device is available `adb devices`
-5. Open Download location in Terminal and run `adb install -r app-release.apk`
+3. Install adb ( [Android Debug Bridge](https://developer.android.com/tools/adb)).
+4. Check if Device is available `adb devices`.
+5. Open Download location in Terminal and run `adb install -r app-release.apk`.
 
 ## First-run setup (in the app)
 
