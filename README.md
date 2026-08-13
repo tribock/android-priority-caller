@@ -73,4 +73,4 @@ nothing is stored anywhere else.
 Apache License 2.0 — see [LICENSE](LICENSE).
 
 
-[ReleaseLink]: https://github.com/tribock/android-priority-caller/releases/download/v0.0.3/app-release.apk
+[ReleaseLink]: https://github.com/tribock/android-priority-caller/releases/download/v0.0.5/app-release.apk

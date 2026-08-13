@@ -2,6 +2,7 @@ package com.prioritycaller.app
 
 import android.content.Context
 import android.net.Uri
+import android.os.Build
 import android.telephony.PhoneNumberUtils
 import android.telephony.TelephonyManager
 import java.util.Locale
@@ -106,10 +107,15 @@ object ContactPrefs {
 
     /**
      * Caller-ID-style comparison tolerant of country-code / trunk-prefix formatting differences
-     * (e.g. "077 123 45 67" vs "+41 77 123 45 67"). Delegates to the platform's own
-     * PhoneNumberUtils.areSamePhoneNumber(), the in-platform successor to the deprecated
-     * PhoneNumberUtils.compare().
+     * (e.g. "077 123 45 67" vs "+41 77 123 45 67"). Uses PhoneNumberUtils.areSamePhoneNumber()
+     * where available (API 31+); below that, falls back to the older PhoneNumberUtils.compare(),
+     * which is deprecated but still functional and covers the same trunk-prefix case.
      */
     internal fun numbersMatch(context: Context, a: String, b: String): Boolean =
-        PhoneNumberUtils.areSamePhoneNumber(a, b, defaultCountryIso(context))
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            PhoneNumberUtils.areSamePhoneNumber(a, b, defaultCountryIso(context))
+        } else {
+            @Suppress("DEPRECATION")
+            PhoneNumberUtils.compare(context, a, b)
+        }
 }
