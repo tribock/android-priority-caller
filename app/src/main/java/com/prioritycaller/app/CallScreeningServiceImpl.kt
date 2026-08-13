@@ -14,21 +14,24 @@ import androidx.core.content.ContextCompat
 class CallScreeningServiceImpl : CallScreeningService() {
 
     override fun onScreenCall(callDetails: Call.Details) {
-        val number = callDetails.handle?.schemeSpecificPart
 
-        val matchedContact = ContactPrefs.getAllContacts(applicationContext)
-            .firstOrNull { contact ->
-                contact.numbers.any { saved ->
-                    ContactPrefs.numbersMatch(saved, number ?: "")
+        if (ContactPrefs.isEnabled(this )) {
+            val number = callDetails.handle?.schemeSpecificPart
+            val matchedContact = ContactPrefs.getAllContacts(applicationContext)
+                .firstOrNull { contact ->
+                    contact.numbers.any { saved ->
+                        ContactPrefs.numbersMatch(saved, number ?: "")
+                    }
                 }
-            }
 
-        if (matchedContact != null) {
-            val serviceIntent = Intent(this, RingtonePlayerService::class.java).apply {
-                putExtra("contact_name", matchedContact.name)
+            if (matchedContact != null) {
+                val serviceIntent = Intent(this, RingtonePlayerService::class.java).apply {
+                    putExtra("contact_name", matchedContact.name)
+                }
+                ContextCompat.startForegroundService(this, serviceIntent)
             }
-            ContextCompat.startForegroundService(this, serviceIntent)
         }
+
 
         val response = CallResponse.Builder()
             .setDisallowCall(false)

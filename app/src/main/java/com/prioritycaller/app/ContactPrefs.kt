@@ -1,6 +1,7 @@
 package com.prioritycaller.app
 
 import android.content.Context
+import android.net.Uri
 
 /**
  * Stores MULTIPLE priority contacts. Each contact is serialized as:
@@ -11,6 +12,23 @@ object ContactPrefs {
 
     private const val PREFS = "priority_caller_prefs"
     private const val KEY_CONTACTS = "priority_contacts_v2"
+
+    private const val KEY_ENABLED = "true"
+
+    private const val KEY_RINGTONE_URI = "ringtone_uri"
+
+    fun getRingtoneUri(context: Context): Uri? {
+        val raw = context.getSharedPreferences(PREFS, Context.MODE_PRIVATE)
+            .getString(KEY_RINGTONE_URI, null)
+        return raw?.let { Uri.parse(it) }
+    }
+
+    fun setRingtoneUri(context: Context, uri: Uri?) {
+        context.getSharedPreferences(PREFS, Context.MODE_PRIVATE)
+            .edit()
+            .putString(KEY_RINGTONE_URI, uri?.toString())
+            .apply()
+    }
 
     data class PriorityContact(val name: String, val numbers: List<String>)
 
@@ -28,6 +46,16 @@ object ContactPrefs {
         val raw = context.getSharedPreferences(PREFS, Context.MODE_PRIVATE)
             .getStringSet(KEY_CONTACTS, emptySet()) ?: emptySet()
         return raw.mapNotNull { deserialize(it) }
+    }
+
+    fun isEnabled(context: Context): Boolean {
+        val sharedPreferences = context.getSharedPreferences(PREFS, Context.MODE_PRIVATE)
+        return sharedPreferences.getBoolean(KEY_ENABLED, true)
+    }
+
+    fun setEnabled(context: Context, isPaused: Boolean) {
+        val sharedPreferences = context.getSharedPreferences(PREFS, Context.MODE_PRIVATE)
+        sharedPreferences.edit().putBoolean(KEY_ENABLED, isPaused).apply()
     }
 
     /** Adds a contact, replacing any existing entry with the same name+numbers. */

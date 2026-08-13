@@ -25,8 +25,9 @@ the call and an alarm-stream ringtone to make sure it's heard.
 
 1. Download APK from github Release (e.g.: [GitHub Release v0.0.1](https://github.com/tribock/android-priority-caller/releases/download/v0.0.1/app-release.apk)).
 2. Tap `app-release.apk` in your Downloads folder.
-3. When the blue/gray Google Play Protect warning pops up, do not click OK.
-4. Click `More details`.  
+3. When Running a Samsung Device you might need to disable the `Auto Blocker`.
+    > Go to Settings > Security and privacy > Auto Blocker and toggle the switch
+4. When the blue/gray Google Play Protect warning pops up, do not click OK. Click `More details`.  
 <img src="doc/images/more_details.png" alt="More details install screenshot" width="150" />
 5. Tap the small text link that says "Install anyway" directly above the OK button.  
 <img src="doc/images/install_anyway.png" alt="Install anyway screenshot" width="150" />

@@ -6,6 +6,7 @@ import android.content.ActivityNotFoundException
 import android.content.ComponentName
 import android.content.Intent
 import android.database.Cursor
+import android.media.RingtoneManager
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
@@ -20,6 +21,7 @@ import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
+import androidx.core.content.IntentCompat
 import com.prioritycaller.app.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
@@ -31,6 +33,18 @@ class MainActivity : AppCompatActivity() {
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
             if (result.resultCode == RESULT_OK) {
                 result.data?.data?.let { readContact(it) }
+            }
+        }
+
+    private val pickRingtoneLauncher =
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+            if (result.resultCode == RESULT_OK) {
+                val uri = result.data?.let {
+                    IntentCompat.getParcelableExtra(
+                        it, RingtoneManager.EXTRA_RINGTONE_PICKED_URI, Uri::class.java
+                    )
+                }
+                ContactPrefs.setRingtoneUri(this, uri)
             }
         }
 
@@ -69,6 +83,15 @@ class MainActivity : AppCompatActivity() {
         binding.contactsSectionHeader.setOnClickListener {
             contactsExpanded = !contactsExpanded
             applyContactsExpandedState(animate = true)
+        }
+
+        binding.btnPickRingtone.setOnClickListener { launchRingtonePicker() }
+        binding.btnRingtoneInfo.setOnClickListener { showRingtoneInfo() }
+        binding.btnResetRingtone.setOnClickListener { resetRingtone() }
+
+        binding.switchPaused.isChecked = ContactPrefs.isEnabled(this@MainActivity)
+        binding.switchPaused.setOnCheckedChangeListener { _, isChecked ->
+            ContactPrefs.setEnabled(this@MainActivity, isChecked)
         }
 
         contactsExpanded = ContactPrefs.getAllContacts(this).isNotEmpty()
@@ -196,6 +219,33 @@ class MainActivity : AppCompatActivity() {
             row.addView(removeBtn)
             binding.contactListContainer.addView(row)
         }
+    }
+
+    // ---------- Ringtone picking ----------
+
+    private fun launchRingtonePicker() {
+        val intent = Intent(RingtoneManager.ACTION_RINGTONE_PICKER).apply {
+            putExtra(RingtoneManager.EXTRA_RINGTONE_TYPE, RingtoneManager.TYPE_RINGTONE)
+            putExtra(RingtoneManager.EXTRA_RINGTONE_SHOW_DEFAULT, true)
+            putExtra(RingtoneManager.EXTRA_RINGTONE_SHOW_SILENT, false)
+            putExtra(RingtoneManager.EXTRA_RINGTONE_EXISTING_URI, ContactPrefs.getRingtoneUri(this@MainActivity))
+        }
+        pickRingtoneLauncher.launch(intent)
+    }
+
+    private fun resetRingtone() {
+        ContactPrefs.setRingtoneUri(this, null)
+        Toast.makeText(this, "Ringtone reset to default", Toast.LENGTH_SHORT).show()
+    }
+
+    private fun showRingtoneInfo() {
+        val uri = ContactPrefs.getRingtoneUri(this)
+        val name = if (uri != null) {
+            RingtoneManager.getRingtone(this, uri)?.getTitle(this) ?: "Custom sound"
+        } else {
+            "Default"
+        }
+        Toast.makeText(this, name, Toast.LENGTH_SHORT).show()
     }
 
     // ---------- Call screening role ----------

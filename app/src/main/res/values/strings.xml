@@ -2,6 +2,8 @@
     <string name="app_name">Priority Caller</string>
     <string name="app_subtitle">Never miss the calls that matter</string>
 
+    <string name="app_enable">Enable/Disable the Priority Caller</string>
+
     <string name="priority_contacts_title">Priority contacts</string>
     <string name="expand_contacts_cd">Expand priority contacts</string>
     <string name="add_priority_contact">Add priority contact</string>
@@ -15,4 +17,8 @@
     <string name="step_miui_battery">Open Battery saver settings</string>
 
     <string name="status_title">Status</string>
+    <string name="show_selected_priority_sound">Show selected priority sound</string>
+    <string name="choose_priority_sound">Choose priority sound</string>
+    <string name="config">Config</string>
+    <string name="reset_to_default_sound">Reset to Default sound</string>
 </resources>
