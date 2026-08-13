@@ -51,6 +51,19 @@ class MainActivity : AppCompatActivity() {
     private val requestPermissionsLauncher =
         registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) { }
 
+    private val requestStoragePermissionLauncher =
+        registerForActivityResult(ActivityResultContracts.RequestPermission()) { granted ->
+            if (granted) {
+                openRingtonePicker()
+            } else {
+                Toast.makeText(
+                    this,
+                    "Storage permission is needed to use a custom ringtone file",
+                    Toast.LENGTH_LONG
+                ).show()
+            }
+        }
+
     private val requestRoleLauncher =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
             val granted = result.resultCode == RESULT_OK
@@ -224,6 +237,21 @@ class MainActivity : AppCompatActivity() {
     // ---------- Ringtone picking ----------
 
     private fun launchRingtonePicker() {
+        val storagePermission = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            android.Manifest.permission.READ_MEDIA_AUDIO
+        } else {
+            android.Manifest.permission.READ_EXTERNAL_STORAGE
+        }
+        if (ContextCompat.checkSelfPermission(this, storagePermission) ==
+            android.content.pm.PackageManager.PERMISSION_GRANTED
+        ) {
+            openRingtonePicker()
+        } else {
+            requestStoragePermissionLauncher.launch(storagePermission)
+        }
+    }
+
+    private fun openRingtonePicker() {
         val intent = Intent(RingtoneManager.ACTION_RINGTONE_PICKER).apply {
             putExtra(RingtoneManager.EXTRA_RINGTONE_TYPE, RingtoneManager.TYPE_RINGTONE)
             putExtra(RingtoneManager.EXTRA_RINGTONE_SHOW_DEFAULT, true)

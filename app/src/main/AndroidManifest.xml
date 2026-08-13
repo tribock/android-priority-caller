@@ -4,6 +4,14 @@
     <!-- Read the address book to pick the priority contact -->
     <uses-permission android:name="android.permission.READ_CONTACTS" />
 
+    <!-- Needed to read custom ringtone files picked from shared storage (e.g. MIUI's
+         ringtone picker can return a file:// path to a Download-folder mp3 rather than
+         a content:// URI). -->
+    <uses-permission android:name="android.permission.READ_MEDIA_AUDIO" />
+    <uses-permission
+        android:name="android.permission.READ_EXTERNAL_STORAGE"
+        android:maxSdkVersion="32" />
+
     <!-- Needed to detect when a ringing priority call is answered or ends -->
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
 

@@ -12,6 +12,7 @@ import android.os.Build
 import android.os.IBinder
 import android.telephony.TelephonyCallback
 import android.telephony.TelephonyManager
+import android.util.Log
 import androidx.core.app.NotificationCompat
 
 /**
@@ -35,6 +36,7 @@ class RingtonePlayerService : Service() {
     private var telephonyCallback: TelephonyCallback? = null
 
     companion object {
+        private const val TAG = "RingtonePlayerService"
         private const val CHANNEL_ID = "priority_call_channel"
         private const val NOTIFICATION_ID = 42
     }
@@ -48,6 +50,7 @@ class RingtonePlayerService : Service() {
     private var currentCallerName: String = "Priority contact"
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
+        Log.d(TAG, "onStartCommand: service started for ${intent?.getStringExtra("contact_name")}")
         currentCallerName = intent?.getStringExtra("contact_name") ?: "Priority contact"
         startForeground(NOTIFICATION_ID, buildNotification())
         boostRingVolume()
@@ -86,6 +89,7 @@ class RingtonePlayerService : Service() {
     // ---------- Ringtone playback ----------
 
     private fun startLoopingRingtone() {
+        val customUri = ContactPrefs.getRingtoneUri(this)
         val resId = resources.getIdentifier("priority_ringtone", "raw", packageName)
 
         mediaPlayer = MediaPlayer().apply {
@@ -97,12 +101,18 @@ class RingtonePlayerService : Service() {
             isLooping = true
 
             try {
-                if (resId != 0) {
+                if (customUri != null) {
+                    // User picked a ringtone via the sound picker; that choice wins.
+                    Log.d(TAG, "Using custom ringtone URI: $customUri")
+                    setDataSource(applicationContext, customUri)
+                } else if (resId != 0) {
+                    Log.d(TAG, "Using bundled raw/priority_ringtone")
                     val afd = resources.openRawResourceFd(resId)
                     setDataSource(afd.fileDescriptor, afd.startOffset, afd.length)
                     afd.close()
                 } else {
                     // Fallback: default system ringtone, still on the alarm stream/usage.
+                    Log.d(TAG, "Falling back to system default ringtone URI")
                     val defaultUri = android.media.RingtoneManager.getDefaultUri(
                         android.media.RingtoneManager.TYPE_RINGTONE
                     )
@@ -117,8 +127,10 @@ class RingtonePlayerService : Service() {
                 }
 
                 start()
+                Log.d(TAG, "MediaPlayer started successfully")
             } catch (e: Exception) {
                 // If playback setup fails, at minimum the boosted ring volume above still applies.
+                Log.e(TAG, "Failed to start ringtone playback", e)
             }
         }
     }

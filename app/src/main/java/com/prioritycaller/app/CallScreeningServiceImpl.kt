@@ -3,6 +3,7 @@ package com.prioritycaller.app
 import android.content.Intent
 import android.telecom.Call
 import android.telecom.CallScreeningService
+import android.util.Log
 import androidx.core.content.ContextCompat
 
 /**
@@ -13,16 +14,23 @@ import androidx.core.content.ContextCompat
  */
 class CallScreeningServiceImpl : CallScreeningService() {
 
+    companion object {
+        private const val TAG = "CallScreeningService"
+    }
+
     override fun onScreenCall(callDetails: Call.Details) {
+        val number = callDetails.handle?.schemeSpecificPart
+        Log.d(TAG, "onScreenCall: number=$number enabled=${ContactPrefs.isEnabled(this)}")
 
         if (ContactPrefs.isEnabled(this )) {
-            val number = callDetails.handle?.schemeSpecificPart
             val matchedContact = ContactPrefs.getAllContacts(applicationContext)
                 .firstOrNull { contact ->
                     contact.numbers.any { saved ->
                         ContactPrefs.numbersMatch(saved, number ?: "")
                     }
                 }
+
+            Log.d(TAG, "matchedContact=${matchedContact?.name}")
 
             if (matchedContact != null) {
                 val serviceIntent = Intent(this, RingtonePlayerService::class.java).apply {
