@@ -13,7 +13,7 @@ the call and an alarm-stream ringtone to make sure it's heard.
 
 ## Installing on an Android device
 
-### Option A — Run from Android Studio (recommended while developing)
+### Run from Android Studio (recommended while developing)
 
 1. Clone this repo and open it in Android Studio.
 2. On the phone: **Settings → About phone → tap "Build number" 7 times** to enable
@@ -21,24 +21,13 @@ the call and an alarm-stream ringtone to make sure it's heard.
 3. Connect the phone via USB and accept the "Allow USB debugging" prompt.
 4. Select the phone as the run target and click **Run ▶**.
 
-### Option B — Build and sideload an APK manually
+### Download apk from Releases
 
-1. From the project root:
-   ```
-   ./gradlew assembleDebug
-   ```
-   The APK is written to `app/build/outputs/apk/debug/app-debug.apk`.
-2. Install it with adb:
-   ```
-   adb install -r app/build/outputs/apk/debug/app-debug.apk
-   ```
-   — or copy the APK to the phone and tap it in a file manager. The phone will
-   prompt to allow installs from that source ("Install unknown apps") the first time.
-
-### Option C — Play Store
-
-Not yet published — see the Play Store section of this repo (`docs/PLAY_STORE_LISTING.md`)
-for the publishing plan.
+1. Download APK from github Release (e.g.: [GitHub Release v0.0.1](https://github.com/tribock/android-priority-caller/releases/download/v0.0.1/app-release.apk))
+2. Connect the Phone to your Computer and enable Debugging as described above.
+3. Install adb ( [Android Debug Bridge](https://developer.android.com/tools/adb))
+4. Check if Device is available `adb devices`
+5. Open Download location in Terminal and run `adb install -r app-release.apk`
 
 ## First-run setup (in the app)
 
