@@ -26,7 +26,7 @@ class CallScreeningServiceImpl : CallScreeningService() {
             val matchedContact = ContactPrefs.getAllContacts(applicationContext)
                 .firstOrNull { contact ->
                     contact.numbers.any { saved ->
-                        ContactPrefs.numbersMatch(saved, number ?: "")
+                        ContactPrefs.numbersMatch(this, saved, number ?: "")
                     }
                 }
 

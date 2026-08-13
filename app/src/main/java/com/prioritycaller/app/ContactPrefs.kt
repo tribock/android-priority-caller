@@ -2,6 +2,9 @@ package com.prioritycaller.app
 
 import android.content.Context
 import android.net.Uri
+import android.telephony.PhoneNumberUtils
+import android.telephony.TelephonyManager
+import java.util.Locale
 
 /**
  * Stores MULTIPLE priority contacts. Each contact is serialized as:
@@ -86,27 +89,27 @@ object ContactPrefs {
     fun isPriorityNumber(context: Context, incomingNumber: String?): Boolean {
         if (incomingNumber.isNullOrBlank()) return false
         return getAllContacts(context).any { contact ->
-            contact.numbers.any { saved -> numbersMatch(saved, incomingNumber) }
+            contact.numbers.any { saved -> numbersMatch(context, saved, incomingNumber) }
         }
     }
 
     private fun normalize(number: String): String =
         number.replace(Regex("[^0-9+]"), "")
 
-    private const val MIN_MATCHING_DIGITS = 7
+    /** SIM country if available (works without READ_PHONE_STATE), else the device locale. */
+    private fun defaultCountryIso(context: Context): String {
+        val simCountry = (context.getSystemService(Context.TELEPHONY_SERVICE) as? TelephonyManager)
+            ?.simCountryIso
+            ?.uppercase(Locale.ROOT)
+        return if (!simCountry.isNullOrBlank()) simCountry else Locale.getDefault().country
+    }
 
     /**
-     * Right-aligned digit comparison, tolerant of country-code / formatting differences
-     * between two numbers (e.g. "+15551234567" vs "(555) 123-4567"). Replaces the
-     * platform's PhoneNumberUtils.compare(), which is deprecated with no in-platform
-     * replacement, by mirroring its own right-aligned suffix-matching approach.
+     * Caller-ID-style comparison tolerant of country-code / trunk-prefix formatting differences
+     * (e.g. "077 123 45 67" vs "+41 77 123 45 67"). Delegates to the platform's own
+     * PhoneNumberUtils.areSamePhoneNumber(), the in-platform successor to the deprecated
+     * PhoneNumberUtils.compare().
      */
-    internal fun numbersMatch(a: String, b: String): Boolean {
-        val digitsA = a.filter(Char::isDigit)
-        val digitsB = b.filter(Char::isDigit)
-        if (digitsA.isEmpty() || digitsB.isEmpty()) return false
-        val overlap = minOf(digitsA.length, digitsB.length)
-        if (overlap < MIN_MATCHING_DIGITS) return digitsA == digitsB
-        return digitsA.takeLast(overlap) == digitsB.takeLast(overlap)
-    }
+    internal fun numbersMatch(context: Context, a: String, b: String): Boolean =
+        PhoneNumberUtils.areSamePhoneNumber(a, b, defaultCountryIso(context))
 }
