@@ -23,7 +23,7 @@ the call and an alarm-stream ringtone to make sure it's heard.
 
 ### Download apk from Releases and install directly on the Mobile Device
 
-1. Download APK from github Release (e.g.: [GitHub Release v0.0.2](https://github.com/tribock/android-priority-caller/releases/download/v0.0.2/app-release.apk)).
+1. Download APK from github Release (e.g.: [GitHub Release][ReleaseLink]).
 2. Tap `app-release.apk` in your Downloads folder.
 3. When Running a Samsung Device you might need to disable the `Auto Blocker`.
     > Go to Settings > Security and privacy > Auto Blocker and toggle the switch
@@ -34,7 +34,7 @@ the call and an alarm-stream ringtone to make sure it's heard.
 
 ### Download apk from Releases and install using a Computer
 
-1. Download APK from github Release (e.g.: [GitHub Release v0.0.1](https://github.com/tribock/android-priority-caller/releases/download/v0.0.1/app-release.apk)).
+1. Download APK from github Release (e.g.: [GitHub Release][ReleaseLink]).
 2. Connect the Phone to your Computer and enable Debugging as described above.
 3. Install adb ( [Android Debug Bridge](https://developer.android.com/tools/adb)).
 4. Check if Device is available `adb devices`.
@@ -71,3 +71,6 @@ nothing is stored anywhere else.
 ## License
 
 Apache License 2.0 — see [LICENSE](LICENSE).
+
+
+[ReleaseLink]: https://github.com/tribock/android-priority-caller/releases/download/v0.0.2/app-release.apk
