@@ -17,7 +17,7 @@ import androidx.core.app.NotificationCompat
 
 /**
  * Runs while the priority contact's call is ringing:
- *  - pushes STREAM_RING to max so the normal ringer is loud too
+ *  - mutes STREAM_RING so the phone's own ringtone doesn't play alongside ours
  *  - plays our own looping mp3 using AudioAttributes.USAGE_ALARM, which the Android
  *    audio framework routes around Do Not Disturb / silent / bedtime mode the same
  *    way a real alarm clock is never silenced by DND.
@@ -53,7 +53,7 @@ class RingtonePlayerService : Service() {
         Log.d(TAG, "onStartCommand: service started for ${intent?.getStringExtra("contact_name")}")
         currentCallerName = intent?.getStringExtra("contact_name") ?: "Priority contact"
         startForeground(NOTIFICATION_ID, buildNotification())
-        boostRingVolume()
+        muteNativeRingtone()
         startLoopingRingtone()
         watchCallState()
         return START_STICKY
@@ -68,15 +68,19 @@ class RingtonePlayerService : Service() {
 
     // ---------- Volume ----------
 
-    private fun boostRingVolume() {
+    /**
+     * Silences the phone's own ring stream so only our alarm-stream ringtone below is heard,
+     * instead of both playing on top of each other. Requires notification policy (DND) access
+     * on API 24+ — without it, setStreamVolume(STREAM_RING, ...) throws SecurityException and
+     * the native ringtone keeps playing alongside ours.
+     */
+    private fun muteNativeRingtone() {
         val am = audioManager ?: return
         previousRingVolume = am.getStreamVolume(AudioManager.STREAM_RING)
-        val max = am.getStreamMaxVolume(AudioManager.STREAM_RING)
         try {
-            am.setStreamVolume(AudioManager.STREAM_RING, max, 0)
+            am.setStreamVolume(AudioManager.STREAM_RING, 0, 0)
         } catch (e: SecurityException) {
-            // Some OEM builds (MIUI included) restrict this without DND access granted.
-            // The alarm-stream ringtone below is the real fallback in that case.
+            Log.e(TAG, "Could not mute native ringtone — grant DND/notification policy access", e)
         }
     }
 
@@ -103,7 +107,6 @@ class RingtonePlayerService : Service() {
             try {
                 if (customUri != null) {
                     // User picked a ringtone via the sound picker; that choice wins.
-                    Log.d(TAG, "Using custom ringtone URI: $customUri")
                     setDataSource(applicationContext, customUri)
                 } else if (resId != 0) {
                     Log.d(TAG, "Using bundled raw/priority_ringtone")
@@ -112,7 +115,6 @@ class RingtonePlayerService : Service() {
                     afd.close()
                 } else {
                     // Fallback: default system ringtone, still on the alarm stream/usage.
-                    Log.d(TAG, "Falling back to system default ringtone URI")
                     val defaultUri = android.media.RingtoneManager.getDefaultUri(
                         android.media.RingtoneManager.TYPE_RINGTONE
                     )
@@ -127,10 +129,8 @@ class RingtonePlayerService : Service() {
                 }
 
                 start()
-                Log.d(TAG, "MediaPlayer started successfully")
             } catch (e: Exception) {
-                // If playback setup fails, at minimum the boosted ring volume above still applies.
-                Log.e(TAG, "Failed to start ringtone playback", e)
+                restoreRingVolume()
             }
         }
     }
