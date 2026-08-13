@@ -50,7 +50,6 @@ class RingtonePlayerService : Service() {
     private var currentCallerName: String = "Priority contact"
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
-        Log.d(TAG, "onStartCommand: service started for ${intent?.getStringExtra("contact_name")}")
         currentCallerName = intent?.getStringExtra("contact_name") ?: "Priority contact"
         startForeground(NOTIFICATION_ID, buildNotification())
         muteNativeRingtone()
@@ -109,7 +108,7 @@ class RingtonePlayerService : Service() {
                     // User picked a ringtone via the sound picker; that choice wins.
                     setDataSource(applicationContext, customUri)
                 } else if (resId != 0) {
-                    Log.d(TAG, "Using bundled raw/priority_ringtone")
+
                     val afd = resources.openRawResourceFd(resId)
                     setDataSource(afd.fileDescriptor, afd.startOffset, afd.length)
                     afd.close()

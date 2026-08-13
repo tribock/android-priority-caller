@@ -20,7 +20,6 @@ class CallScreeningServiceImpl : CallScreeningService() {
 
     override fun onScreenCall(callDetails: Call.Details) {
         val number = callDetails.handle?.schemeSpecificPart
-        Log.d(TAG, "onScreenCall: number=$number enabled=${ContactPrefs.isEnabled(this)}")
 
         if (ContactPrefs.isEnabled(this )) {
             val matchedContact = ContactPrefs.getAllContacts(applicationContext)
@@ -30,7 +29,6 @@ class CallScreeningServiceImpl : CallScreeningService() {
                     }
                 }
 
-            Log.d(TAG, "matchedContact=${matchedContact?.name}")
 
             if (matchedContact != null) {
                 val serviceIntent = Intent(this, RingtonePlayerService::class.java).apply {
