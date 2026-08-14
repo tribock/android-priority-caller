@@ -114,6 +114,6 @@ Pull requests run a separate build + lint check and never publish a release.
 Apache License 2.0 — see [LICENSE](LICENSE).
 
 
-[ReleaseLink]: https://github.com/tribock/android-priority-caller/releases/download/v0.0.5/app-release.apk
+[ReleaseLink]: https://github.com/tribock/android-priority-caller/releases/latest/download/priority_caller.apk
 [ReleasesPage]: https://github.com/tribock/android-priority-caller/releases
 [ConventionalCommits]: https://www.conventionalcommits.org/
