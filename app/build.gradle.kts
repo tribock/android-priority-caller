@@ -54,6 +54,18 @@ android {
     }
 }
 
+// Names the release APK priority_caller_<versionName>.apk instead of the default
+// app-release.apk, so CI can upload it to GitHub Releases without a separate
+// rename step.
+androidComponents {
+    onVariants(selector().withBuildType("release")) { variant ->
+        val versionName = (project.findProperty("versionNameOverride") as String?) ?: "develop"
+        variant.outputs.forEach { output ->
+            output.outputFileName.set("priority_caller_$versionName.apk")
+        }
+    }
+}
+
 // Built-in Kotlin (AGP 9+) configures the compiler through the `kotlin {}` block
 // instead of the old android.kotlinOptions {}.
 kotlin {

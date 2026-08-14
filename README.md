@@ -39,7 +39,7 @@ the call and an alarm-stream ringtone to make sure it's heard.
    prompted, tap **Settings** on the warning, then enable **Allow from this source**
    for your browser (or go to **Settings → Apps → [your browser] → Install unknown
    apps → Allow from this source** beforehand).
-3. Tap `app-release.apk` in your Downloads folder.
+3. Tap the downloaded `priority_caller_<version>.apk` in your Downloads folder.
 4. When Running a Samsung Device you might need to disable the `Auto Blocker`.
     > Go to Settings > Security and privacy > Auto Blocker and toggle the switch
 5. When the blue/gray Google Play Protect warning pops up, do not click OK. Click `More details`.  
@@ -53,7 +53,7 @@ the call and an alarm-stream ringtone to make sure it's heard.
 2. Connect the Phone to your Computer and enable Debugging as described above.
 3. Install adb ( [Android Debug Bridge](https://developer.android.com/tools/adb)).
 4. Check if Device is available `adb devices`.
-5. Open Download location in Terminal and run `adb install -r app-release.apk`.
+5. Open Download location in Terminal and run `adb install -r priority_caller_<version>.apk`.
 
 ## First-run setup (in the app)
 
@@ -97,8 +97,9 @@ nothing is stored anywhere else.
 ## Releases
 
 Every push to `main` (including a merged PR) triggers an automated build that
-publishes a new [GitHub Release][ReleasesPage] with a signed `app-release.apk`
-attached. The version number bumps automatically based on your commit messages
+publishes a new [GitHub Release][ReleasesPage] with a signed
+`priority_caller_<version>.apk` attached. The version number bumps automatically
+based on your commit messages
 since the last release, following [Conventional Commits][ConventionalCommits]:
 
 - `fix: ...` → patch bump (`1.2.3` → `1.2.4`)
