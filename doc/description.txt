@@ -1,0 +1,39 @@
+Never miss a call that actually matters.
+
+Priority Caller lets you pick a handful of contacts — your kids, your partner, an elderly parent, an on-call line — and makes sure calls from them always get through loudly, even when your phone is set to Do Not Disturb, silent, or vibrate.
+
+HOW IT WORKS
+Using Android's built-in Call Screening feature, Priority Caller quietly checks every incoming call against your saved list. If the caller isn't on your list, nothing happens — the app stays out of the way and your normal ringtone and settings apply. If the caller IS on your list, the app plays a loud ringtone on the alarm audio stream, the same way alarm clocks aren't silenced by Do Not Disturb, so you hear it no matter what.
+
+KEY FEATURES
+• Add any number of priority contacts straight from your address book
+• Calls from priority contacts ring loudly and bypass Do Not Disturb automatically
+• All other calls are left completely untouched
+• One switch to turn priority alerts on or off without losing your contact list or permissions
+• Pick any ringtone on your device for priority calls, or use the default
+• No account, no sign-up, no internet connection required
+• Works entirely in the background — no need to keep the app open
+
+WHO IT'S FOR
+• Parents who need to hear from their kids or school, even during meetings or at night
+• People caring for elderly or at-risk family members
+• Anyone who silences their phone often but can't risk missing an urgent call
+• On-call workers who need specific numbers to always break through
+
+PRIVACY FIRST
+Priority Caller was built to do one job without collecting anything. Your priority contacts and their numbers are stored only on your device using Android's local app storage — never uploaded, synced, or shared. The app contains no analytics, no ads, and no network access of any kind. Uninstalling the app removes all saved data permanently. Full details are available in the app's privacy policy.
+
+PERMISSIONS
+• Contacts — to let you choose priority contacts from your address book
+• Call Screening role — the standard Android mechanism used to check incoming numbers against your list; the app never blocks or redirects calls
+• Do Not Disturb access — so the priority ringtone can sound through Do Not Disturb
+• Phone state — to know when a ringing priority call is answered or ends, so the alert stops
+• Notifications and full-screen alert — to show you the priority call, even when your screen is off or locked
+
+REQUIREMENTS
+• Android 8.0 or newer
+• A device with a standard phone/dialer setup (most phones; some heavily customized ROMs may not support call screening)
+
+Some devices with aggressive battery managers (for example Xiaomi/MIUI) require a couple of extra one-time settings, explained inside the app, to keep background alerts reliable.
+
+Set your priority contacts once, and let Priority Caller make sure the calls that matter most never get lost in silence.

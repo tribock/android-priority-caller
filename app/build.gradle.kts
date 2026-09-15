@@ -11,7 +11,7 @@ android {
     compileSdk = 36
 
     defaultConfig {
-        applicationId = "com.prioritycaller.app"
+        applicationId = "ch.tribock.priority_caller"
         minSdk = 26
         targetSdk = 36
         // Overridable from CI so releases can carry a real semantic version, e.g.:

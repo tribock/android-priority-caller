@@ -32,6 +32,8 @@ class RingtonePlayerService : Service() {
     private var mediaPlayer: MediaPlayer? = null
     private var audioManager: AudioManager? = null
     private var previousRingVolume: Int = -1
+    private var previousRingerMode: Int = AudioManager.RINGER_MODE_NORMAL
+    private var previousAlarmVolume: Int = -1
     private var telephonyManager: TelephonyManager? = null
     private var telephonyCallback: TelephonyCallback? = null
 
@@ -73,10 +75,17 @@ class RingtonePlayerService : Service() {
      * instead of both playing on top of each other. Requires notification policy (DND) access
      * on API 24+ — without it, setStreamVolume(STREAM_RING, ...) throws SecurityException and
      * the native ringtone keeps playing alongside ours.
+     *
+     * Ringer mode (NORMAL/VIBRATE/SILENT) is captured *before* touching anything, since
+     * setStreamVolume(STREAM_RING, 0, ...) can itself flip the mode to SILENT as a side effect.
+     * If the phone was already silent with vibration off, or on vibrate-only, that has to come
+     * back exactly as it was once the priority ringtone stops — not just whatever ring volume
+     * happened to be set.
      */
     private fun muteNativeRingtone() {
         val am = audioManager ?: return
         previousRingVolume = am.getStreamVolume(AudioManager.STREAM_RING)
+        previousRingerMode = am.ringerMode
         try {
             am.setStreamVolume(AudioManager.STREAM_RING, 0, 0)
         } catch (e: SecurityException) {
@@ -85,8 +94,21 @@ class RingtonePlayerService : Service() {
     }
 
     private fun restoreRingVolume() {
-        if (previousRingVolume >= 0) {
-            audioManager?.setStreamVolume(AudioManager.STREAM_RING, previousRingVolume, 0)
+        val am = audioManager ?: return
+        try {
+            am.ringerMode = previousRingerMode
+            // In VIBRATE/SILENT mode the ring stream is forced to 0 regardless of what's passed
+            // here, so only NORMAL mode needs the original volume level restored explicitly.
+            if (previousRingerMode == AudioManager.RINGER_MODE_NORMAL && previousRingVolume >= 0) {
+                am.setStreamVolume(AudioManager.STREAM_RING, previousRingVolume, 0)
+            }
+        } catch (e: SecurityException) {
+            Log.e(TAG, "Could not restore original ringer mode — grant DND/notification policy access", e)
+        }
+        // startLoopingRingtone() maxes STREAM_ALARM to make sure the priority ringtone is heard;
+        // that has to come back to whatever the user had it set to, not stay maxed forever.
+        if (previousAlarmVolume >= 0) {
+            am.setStreamVolume(AudioManager.STREAM_ALARM, previousAlarmVolume, 0)
         }
     }
 
@@ -124,6 +146,7 @@ class RingtonePlayerService : Service() {
 
                 val am = audioManager
                 if (am != null) {
+                    previousAlarmVolume = am.getStreamVolume(AudioManager.STREAM_ALARM)
                     val maxAlarm = am.getStreamMaxVolume(AudioManager.STREAM_ALARM)
                     am.setStreamVolume(AudioManager.STREAM_ALARM, maxAlarm, 0)
                 }
