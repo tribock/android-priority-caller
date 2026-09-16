@@ -11,10 +11,19 @@
     <string name="remove_contact_cd">Remove %1$s</string>
 
     <string name="setup_title">Setup</string>
-    <string name="step_call_screening">Grant Call Screening role</string>
+    <string name="step_call_screening">Allow call detection</string>
+    <string name="call_detection_info_cd">Why is this needed?</string>
+    <string name="call_detection_info_message">This permission sets which app is allowed to screen and identify incoming calls — needed to decide whether to trigger a priority call.</string>
+    <string name="autostart_info_cd">Why is this needed?</string>
+    <string name="autostart_info_message">MIUI aggressively closes apps running in the background to save battery. Enabling Autostart here lets Priority Caller keep running so it can still detect calls after a restart or after not being opened for a while.</string>
+    <string name="battery_info_cd">Why is this needed?</string>
+    <string name="battery_info_message">Some phones restrict battery usage for apps you don\'t open often, which can stop this app from detecting calls in the background. On the screen that opens, find the battery setting for Priority Caller and choose the option that removes restrictions — usually labelled \"Unrestricted\", \"No restrictions\", \"Don\'t optimize\", or \"Allow background activity\". The exact wording depends on your phone\'s manufacturer.</string>
     <string name="step_dnd_access">Grant Do Not Disturb access</string>
     <string name="step_miui_autostart">Open Autostart settings</string>
     <string name="step_miui_battery">Open Battery saver settings</string>
+    <string name="dnd_info_message">Allow the app to bypass Do Not Disturb for priority contacts when ringing.</string>
+    <string name="dnd_info_cd">Why is this needed?</string>
+
 
     <string name="status_title">Status</string>
     <string name="show_selected_priority_sound">Show selected priority sound</string>
