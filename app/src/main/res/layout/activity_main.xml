@@ -287,29 +287,86 @@
 
                     </LinearLayout>
 
-                    <com.google.android.material.button.MaterialButton
-                        android:id="@+id/btnDndAccess"
-                        style="@style/Widget.Material3.Button.OutlinedButton"
+                    <LinearLayout
+                        android:id="@+id/dndRow"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="10dp"
-                        android:text="@string/step_dnd_access" />
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical">
 
-                    <com.google.android.material.button.MaterialButton
-                        android:id="@+id/btnMiuiAutostart"
-                        style="@style/Widget.Material3.Button.OutlinedButton"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="10dp"
-                        android:text="@string/step_miui_autostart" />
+                            <com.google.android.material.button.MaterialButton
+                                android:id="@+id/btnDndAccess"
+                                style="@style/Widget.Material3.Button.OutlinedButton"
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:text="@string/step_dnd_access" />
+                            <ImageButton
+                                android:id="@+id/btnDnDInfo"
+                                android:layout_width="40dp"
+                                android:layout_height="40dp"
+                                android:layout_marginStart="4dp"
+                                android:background="?attr/selectableItemBackgroundBorderless"
+                                android:src="@android:drawable/ic_dialog_info"
+                                android:contentDescription="@string/dnd_info_cd"
+                                app:tint="?attr/colorOnSurfaceVariant" />
+                    </LinearLayout>
 
-                    <com.google.android.material.button.MaterialButton
-                        android:id="@+id/btnMiuiBattery"
-                        style="@style/Widget.Material3.Button.OutlinedButton"
+                    <LinearLayout
+                        android:id="@+id/autostartRow"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="10dp"
-                        android:text="@string/step_miui_battery" />
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical">
+
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/btnMiuiAutostart"
+                            style="@style/Widget.Material3.Button.OutlinedButton"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="@string/step_miui_autostart" />
+
+                        <ImageButton
+                            android:id="@+id/btnAutostartInfo"
+                            android:layout_width="40dp"
+                            android:layout_height="40dp"
+                            android:layout_marginStart="4dp"
+                            android:background="?attr/selectableItemBackgroundBorderless"
+                            android:src="@android:drawable/ic_dialog_info"
+                            android:contentDescription="@string/autostart_info_cd"
+                            app:tint="?attr/colorOnSurfaceVariant" />
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical">
+
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/btnMiuiBattery"
+                            style="@style/Widget.Material3.Button.OutlinedButton"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="@string/step_miui_battery" />
+
+                        <ImageButton
+                            android:id="@+id/btnBatteryInfo"
+                            android:layout_width="40dp"
+                            android:layout_height="40dp"
+                            android:layout_marginStart="4dp"
+                            android:background="?attr/selectableItemBackgroundBorderless"
+                            android:src="@android:drawable/ic_dialog_info"
+                            android:contentDescription="@string/battery_info_cd"
+                            app:tint="?attr/colorOnSurfaceVariant" />
+
+                    </LinearLayout>
 
                 </LinearLayout>
 

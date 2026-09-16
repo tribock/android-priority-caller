@@ -5,6 +5,7 @@ import android.app.role.RoleManager
 import android.content.ActivityNotFoundException
 import android.content.ComponentName
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.database.Cursor
 import android.media.RingtoneManager
 import android.net.Uri
@@ -94,7 +95,13 @@ class MainActivity : AppCompatActivity() {
         binding.btnCallScreeningInfo.setOnClickListener { showCallScreeningInfo() }
         binding.btnDndAccess.setOnClickListener { requestDndAccess() }
         binding.btnMiuiAutostart.setOnClickListener { openMiuiAutostartSettings() }
+        binding.btnAutostartInfo.setOnClickListener { showAutostartInfo() }
         binding.btnMiuiBattery.setOnClickListener { openMiuiBatterySettings() }
+        binding.btnBatteryInfo.setOnClickListener { showBatteryInfo() }
+        binding.btnDnDInfo.setOnClickListener { showDnDInfo() }
+        if (!isMiuiDevice()) {
+            binding.autostartRow.visibility = View.GONE
+        }
         binding.contactsSectionHeader.setOnClickListener {
             contactsExpanded = !contactsExpanded
             applyContactsExpandedState(animate = true)
@@ -318,6 +325,40 @@ class MainActivity : AppCompatActivity() {
 
     // ---------- MIUI-specific screens ----------
 
+    private fun showAutostartInfo() {
+        MaterialAlertDialogBuilder(this)
+            .setMessage(R.string.autostart_info_message)
+            .setPositiveButton(android.R.string.ok, null)
+            .show()
+    }
+
+    private fun showBatteryInfo() {
+        MaterialAlertDialogBuilder(this)
+            .setMessage(R.string.battery_info_message)
+            .setPositiveButton(android.R.string.ok, null)
+            .show()
+    }
+
+    private fun showDnDInfo() {
+        MaterialAlertDialogBuilder(this)
+            .setMessage(R.string.dnd_info_message)
+            .setPositiveButton(android.R.string.ok, null)
+            .show()
+    }
+
+    /**
+     * The Autostart step is MIUI/HyperOS-specific — checking for MIUI's own security-center
+     * package
+     */
+    private fun isMiuiDevice(): Boolean {
+        return try {
+            packageManager.getPackageInfo("com.miui.securitycenter", 0)
+            true
+        } catch (e: PackageManager.NameNotFoundException) {
+            false
+        }
+    }
+
     private fun openMiuiAutostartSettings() {
         try {
             val intent = Intent().apply {
@@ -350,7 +391,7 @@ class MainActivity : AppCompatActivity() {
             startActivity(intent)
             Toast.makeText(
                 this,
-                "Open Battery saver here and set it to 'No restrictions'.",
+                "Open battery settings here and remove restrictions for this app.",
                 Toast.LENGTH_LONG
             ).show()
         }
