@@ -22,6 +22,7 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.core.content.IntentCompat
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.prioritycaller.app.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
@@ -90,6 +91,7 @@ class MainActivity : AppCompatActivity() {
 
         binding.btnPickContact.setOnClickListener { launchContactPicker() }
         binding.btnCallScreeningRole.setOnClickListener { requestCallScreeningRole() }
+        binding.btnCallScreeningInfo.setOnClickListener { showCallScreeningInfo() }
         binding.btnDndAccess.setOnClickListener { requestDndAccess() }
         binding.btnMiuiAutostart.setOnClickListener { openMiuiAutostartSettings() }
         binding.btnMiuiBattery.setOnClickListener { openMiuiBatterySettings() }
@@ -278,6 +280,13 @@ class MainActivity : AppCompatActivity() {
 
     // ---------- Call screening role ----------
 
+    private fun showCallScreeningInfo() {
+        MaterialAlertDialogBuilder(this)
+            .setMessage(R.string.call_detection_info_message)
+            .setPositiveButton(android.R.string.ok, null)
+            .show()
+    }
+
     private fun requestCallScreeningRole() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
             val roleManager = getSystemService(RoleManager::class.java)
@@ -289,7 +298,7 @@ class MainActivity : AppCompatActivity() {
                 val intent = roleManager.createRequestRoleIntent(RoleManager.ROLE_CALL_SCREENING)
                 requestRoleLauncher.launch(intent)
             } else {
-                Toast.makeText(this, "Call screening role not available on this device", Toast.LENGTH_LONG).show()
+                Toast.makeText(this, "Call detection not available on this device", Toast.LENGTH_LONG).show()
             }
         } else {
             Toast.makeText(this, "Requires Android 10+", Toast.LENGTH_LONG).show()
@@ -356,9 +365,9 @@ class MainActivity : AppCompatActivity() {
             getSystemService(RoleManager::class.java).isRoleHeld(RoleManager.ROLE_CALL_SCREENING)
         } else false
 
-        binding.tvStatus.text = "DND access: ${if (dndGranted) "granted" else "NOT granted"}\n" +
-            "Call screening role: ${if (roleGranted) "granted" else "NOT granted"}\n" +
-            "Complete the steps above, in order, then leave the app and " +
-            "test with a real call once done."
+        binding.tvStatus.text = "Call detection: ${if (roleGranted) "granted" else "NOT granted"}\n" +
+                "DND access: ${if (dndGranted) "granted" else "NOT granted"}\n" +
+                "Complete the steps above, in order, then leave the app and " +
+                "test with a real call once done."
     }
 }

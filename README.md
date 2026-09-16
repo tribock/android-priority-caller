@@ -61,7 +61,7 @@ After installing, open the app and complete the steps it shows, in order:
 
 1. **Add priority contact(s)** — tap "+ Add priority contact" and pick from your
    address book. Repeat for as many contacts as you want.
-2. **Grant the Call Screening role** — required so Android routes every incoming
+2. **Allow call detection** — required so Android routes every incoming
    call through this app to check it against your priority list.
 3. **Grant Do Not Disturb access** — required so the priority ringtone can sound
    even while DND is on.

@@ -11,7 +11,9 @@
     <string name="remove_contact_cd">Remove %1$s</string>
 
     <string name="setup_title">Setup</string>
-    <string name="step_call_screening">Grant Call Screening role</string>
+    <string name="step_call_screening">Allow call detection</string>
+    <string name="call_detection_info_cd">Why is this needed?</string>
+    <string name="call_detection_info_message">This permission sets which app is allowed to screen and identify incoming calls — needed to decide whether to trigger a priority call.</string>
     <string name="step_dnd_access">Grant Do Not Disturb access</string>
     <string name="step_miui_autostart">Open Autostart settings</string>
     <string name="step_miui_battery">Open Battery saver settings</string>
