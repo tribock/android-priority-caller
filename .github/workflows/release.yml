@@ -1,6 +1,7 @@
 name: Release
 
 on:
+  workflow_dispatch:
   push:
     branches: [main]
 
@@ -39,14 +40,14 @@ jobs:
       - name: Decode signing keystore
         run: echo "${{ secrets.JKS_BASE64 }}" | base64 --decode > "$RUNNER_TEMP/release.jks"
 
-      - name: Build release APK
+      - name: Build release APK and AAB
         env:
           JKS_STORE_PATH: ${{ runner.temp }}/release.jks
           JKS_STORE_PW: ${{ secrets.JKS_STORE_PW }}
           JKS_KEY_ALIAS: ${{ secrets.JKS_KEY_ALIAS }}
           JKS_KEY_PW: ${{ secrets.JKS_KEY_PW }}
         run: |
-          ./gradlew assembleRelease --stacktrace \
+          ./gradlew assembleRelease bundleRelease --stacktrace \
             -PversionNameOverride=${{ steps.tag.outputs.new_version }} \
             -PversionCodeOverride=${{ github.run_number }}
 
@@ -68,3 +69,4 @@ jobs:
           files: |
             app/build/outputs/apk/release/priority_caller_${{ steps.tag.outputs.new_version }}.apk
             app/build/outputs/apk/release/priority_caller.apk
+            app/build/outputs/bundle/release/app-release.aab
