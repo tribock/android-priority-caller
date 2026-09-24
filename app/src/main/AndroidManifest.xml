@@ -32,7 +32,20 @@
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:theme="@style/Theme.PriorityCaller"
-        android:supportsRtl="true">
+        android:supportsRtl="true"
+        android:localeConfig="@xml/locales_config">
+
+        <!-- Lets AppCompatDelegate's per-app language API (used in MainActivity to switch
+             between English/German via the flag buttons) persist the chosen locale across
+             process restarts on Android 12L and below; API 33+ handles this natively. -->
+        <service
+            android:name="androidx.appcompat.app.AppLocalesMetadataHolderService"
+            android:enabled="false"
+            android:exported="false">
+            <meta-data
+                android:name="autoStoreLocales"
+                android:value="true" />
+        </service>
 
         <activity
             android:name=".MainActivity"

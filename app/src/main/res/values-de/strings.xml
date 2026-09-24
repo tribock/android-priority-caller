@@ -1,0 +1,61 @@
+<resources>
+    <string name="app_name">Priority Caller</string>
+    <string name="app_subtitle">Verpasse nie mehr die Anrufe, die zählen</string>
+
+    <string name="app_enable">Priority Caller aktivieren/deaktivieren</string>
+
+    <string name="priority_contacts_title">Prioritätskontakte</string>
+    <string name="expand_contacts_cd">Prioritätskontakte anzeigen</string>
+    <string name="add_priority_contact">Prioritätskontakt hinzufügen</string>
+    <string name="no_priority_contacts">Noch keine Prioritätskontakte</string>
+    <string name="remove_contact_cd">%1$s entfernen</string>
+
+    <string name="setup_title">Einrichtung</string>
+    <string name="step_call_screening">Anruferkennung erlauben</string>
+    <string name="call_detection_info_cd">Warum wird das benötigt?</string>
+    <string name="call_detection_info_message">Diese Berechtigung legt fest, welche App eingehende Anrufe prüfen und identifizieren darf — notwendig, um zu entscheiden, ob ein Prioritätsanruf ausgelöst werden soll.</string>
+    <string name="autostart_info_cd">Warum wird das benötigt?</string>
+    <string name="autostart_info_message">MIUI beendet Apps im Hintergrund sehr aggressiv, um Akku zu sparen. Wenn du hier Autostart aktivierst, kann Priority Caller weiterlaufen und auch nach einem Neustart oder längerer Nichtnutzung Anrufe erkennen.</string>
+    <string name="battery_info_cd">Warum wird das benötigt?</string>
+    <string name="battery_info_message">Manche Handys schränken den Akkuverbrauch für Apps ein, die selten geöffnet werden — das kann verhindern, dass diese App Anrufe im Hintergrund erkennt. Suche auf dem sich öffnenden Bildschirm die Akku-Einstellung für Priority Caller und wähle die Option, die Einschränkungen aufhebt — meist \"Uneingeschränkt\", \"Keine Einschränkungen\", \"Nicht optimieren\" oder \"Hintergrundaktivität zulassen\" genannt. Die genaue Bezeichnung hängt vom Hersteller deines Handys ab.</string>
+    <string name="step_dnd_access">Zugriff auf \'Nicht stören\' erteilen</string>
+    <string name="step_miui_autostart">Autostart-Einstellungen öffnen</string>
+    <string name="step_miui_battery">Akkusparen-Einstellungen öffnen</string>
+    <string name="dnd_info_message">Erlaubt der App, für Prioritätskontakte beim Klingeln den \'Nicht stören\'-Modus zu umgehen.</string>
+    <string name="dnd_info_cd">Warum wird das benötigt?</string>
+
+    <string name="status_title">Status</string>
+    <string name="show_selected_priority_sound">Ausgewählten Prioritätston anzeigen</string>
+    <string name="choose_priority_sound">Prioritätston wählen</string>
+    <string name="config">Konfiguration</string>
+    <string name="reset_to_default_sound">Auf Standardton zurücksetzen</string>
+
+    <string name="storage_permission_needed">Speicherzugriff wird benötigt, um eine eigene Klingelton-Datei zu verwenden</string>
+    <string name="role_granted">Anruferkennungs-Rolle erteilt</string>
+    <string name="role_not_granted">Rolle NICHT erteilt</string>
+    <string name="could_not_read_contact">Kontakt konnte nicht gelesen werden</string>
+    <string name="contact_no_numbers">Kontakt hat keine Telefonnummern</string>
+    <string name="contact_added">Hinzugefügt: %1$s</string>
+    <string name="unknown_contact">Unbekannt</string>
+    <string name="ringtone_reset">Klingelton auf Standard zurückgesetzt</string>
+    <string name="custom_sound">Eigener Ton</string>
+    <string name="default_sound_label">Standard</string>
+    <string name="already_granted">Bereits erteilt</string>
+    <string name="call_detection_unavailable">Anruferkennung auf diesem Gerät nicht verfügbar</string>
+    <string name="requires_android_10">Erfordert Android 10+</string>
+    <string name="autostart_fallback_message">Der Autostart-Bildschirm konnte nicht automatisch geöffnet werden — gehe zu Sicherheit-App > Berechtigungen > Autostart und aktiviere diese App manuell.</string>
+    <string name="battery_fallback_message">Öffne hier die Akku-Einstellungen und hebe die Einschränkungen für diese App auf.</string>
+    <string name="status_granted">erteilt</string>
+    <string name="status_not_granted">NICHT erteilt</string>
+    <string name="status_summary">Anruferkennung: %1$s\nZugriff auf \'Nicht stören\': %2$s\nSchliesse die obigen Schritte der Reihe nach ab, verlasse dann die App und teste mit einem echten Anruf.</string>
+
+    <string name="flag_ch_cd">Auf Deutsch wechseln</string>
+    <string name="flag_de_cd">Auf Deutsch wechseln</string>
+    <string name="flag_gb_cd">Auf Englisch wechseln</string>
+
+    <string name="default_caller_name">Prioritätskontakt</string>
+    <string name="priority_call_channel_name">Prioritätsanruf-Alarm</string>
+    <string name="priority_call_channel_description">Wird angezeigt, während ein Prioritätskontakt anruft</string>
+    <string name="incoming_priority_call_title">Eingehender Prioritätsanruf</string>
+    <string name="priority_call_notification_text">%1$s ruft an — klingelt bei maximaler Lautstärke</string>
+</resources>

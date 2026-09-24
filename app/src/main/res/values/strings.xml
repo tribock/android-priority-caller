@@ -30,4 +30,33 @@
     <string name="choose_priority_sound">Choose priority sound</string>
     <string name="config">Config</string>
     <string name="reset_to_default_sound">Reset to Default sound</string>
+
+    <string name="storage_permission_needed">Storage permission is needed to use a custom ringtone file</string>
+    <string name="role_granted">Call screening role granted</string>
+    <string name="role_not_granted">Role NOT granted</string>
+    <string name="could_not_read_contact">Could not read contact</string>
+    <string name="contact_no_numbers">Contact has no phone numbers</string>
+    <string name="contact_added">Added: %1$s</string>
+    <string name="unknown_contact">Unknown</string>
+    <string name="ringtone_reset">Ringtone reset to default</string>
+    <string name="custom_sound">Custom sound</string>
+    <string name="default_sound_label">Default</string>
+    <string name="already_granted">Already granted</string>
+    <string name="call_detection_unavailable">Call detection not available on this device</string>
+    <string name="requires_android_10">Requires Android 10+</string>
+    <string name="autostart_fallback_message">Couldn\'t open Autostart screen automatically — go to Security app > Permissions > Autostart and enable this app manually.</string>
+    <string name="battery_fallback_message">Open battery settings here and remove restrictions for this app.</string>
+    <string name="status_granted">granted</string>
+    <string name="status_not_granted">NOT granted</string>
+    <string name="status_summary">Call detection: %1$s\nDND access: %2$s\nComplete the steps above, in order, then leave the app and test with a real call once done.</string>
+
+    <string name="flag_ch_cd">Switch to German</string>
+    <string name="flag_de_cd">Switch to German</string>
+    <string name="flag_gb_cd">Switch to English</string>
+
+    <string name="default_caller_name">Priority contact</string>
+    <string name="priority_call_channel_name">Priority call alert</string>
+    <string name="priority_call_channel_description">Shown while a priority contact\'s call is ringing</string>
+    <string name="incoming_priority_call_title">Incoming priority call</string>
+    <string name="priority_call_notification_text">%1$s is calling — ringing at max volume</string>
 </resources>

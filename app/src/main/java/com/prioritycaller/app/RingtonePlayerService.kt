@@ -4,7 +4,9 @@ import android.app.Notification
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.Service
+import android.content.Context
 import android.content.Intent
+import android.content.res.Configuration
 import android.media.AudioAttributes
 import android.media.AudioManager
 import android.media.MediaPlayer
@@ -13,6 +15,7 @@ import android.os.IBinder
 import android.telephony.TelephonyCallback
 import android.telephony.TelephonyManager
 import android.util.Log
+import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.app.NotificationCompat
 
 /**
@@ -43,17 +46,37 @@ class RingtonePlayerService : Service() {
         private const val NOTIFICATION_ID = 42
     }
 
+    /**
+     * AppCompatDelegate's per-app language selection (switched via the flag buttons in
+     * MainActivity) only auto-propagates to plain Service components on Android 13+, where the
+     * system itself tracks the per-app locale. On older versions the androidx backport only
+     * wraps AppCompatActivity contexts, so this service — not an Activity — needs to apply the
+     * chosen locale to its own resources manually, or its notification text would silently stay
+     * in the device's system language regardless of what the user picked in the app.
+     */
+    override fun attachBaseContext(newBase: Context) {
+        val locales = AppCompatDelegate.getApplicationLocales()
+        val wrapped = if (!locales.isEmpty) {
+            val config = Configuration(newBase.resources.configuration)
+            config.setLocale(locales[0])
+            newBase.createConfigurationContext(config)
+        } else {
+            newBase
+        }
+        super.attachBaseContext(wrapped)
+    }
+
     override fun onCreate() {
         super.onCreate()
         audioManager = getSystemService(AUDIO_SERVICE) as AudioManager
         createNotificationChannel()
     }
 
-    private var currentCallerName: String = "Priority contact"
+    private var currentCallerName: String = ""
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         Log.d(TAG, "onStartCommand: service started for ${intent?.getStringExtra("contact_name")}")
-        currentCallerName = intent?.getStringExtra("contact_name") ?: "Priority contact"
+        currentCallerName = intent?.getStringExtra("contact_name") ?: getString(R.string.default_caller_name)
         startForeground(NOTIFICATION_ID, buildNotification())
         muteNativeRingtone()
         startLoopingRingtone()
@@ -218,10 +241,10 @@ class RingtonePlayerService : Service() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             val channel = NotificationChannel(
                 CHANNEL_ID,
-                "Priority call alert",
+                getString(R.string.priority_call_channel_name),
                 NotificationManager.IMPORTANCE_HIGH
             ).apply {
-                description = "Shown while a priority contact's call is ringing"
+                description = getString(R.string.priority_call_channel_description)
                 setBypassDnd(true)
                 enableVibration(true)
             }
@@ -231,8 +254,8 @@ class RingtonePlayerService : Service() {
     }
     private fun buildNotification(): Notification {
         return NotificationCompat.Builder(this, CHANNEL_ID)
-            .setContentTitle("Incoming priority call")
-            .setContentText("$currentCallerName is calling — ringing at max volume")
+            .setContentTitle(getString(R.string.incoming_priority_call_title))
+            .setContentText(getString(R.string.priority_call_notification_text, currentCallerName))
             .setSmallIcon(android.R.drawable.sym_call_incoming)
             .setPriority(NotificationCompat.PRIORITY_MAX)
             .setCategory(NotificationCompat.CATEGORY_CALL)
