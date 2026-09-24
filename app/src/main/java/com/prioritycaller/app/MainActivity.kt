@@ -5,6 +5,7 @@ import android.app.role.RoleManager
 import android.content.ActivityNotFoundException
 import android.content.ComponentName
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.database.Cursor
 import android.media.RingtoneManager
 import android.net.Uri
@@ -20,8 +21,11 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.content.ContextCompat
 import androidx.core.content.IntentCompat
+import androidx.core.os.LocaleListCompat
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.prioritycaller.app.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
@@ -58,7 +62,7 @@ class MainActivity : AppCompatActivity() {
             } else {
                 Toast.makeText(
                     this,
-                    "Storage permission is needed to use a custom ringtone file",
+                    R.string.storage_permission_needed,
                     Toast.LENGTH_LONG
                 ).show()
             }
@@ -69,13 +73,20 @@ class MainActivity : AppCompatActivity() {
             val granted = result.resultCode == RESULT_OK
             Toast.makeText(
                 this,
-                if (granted) "Call screening role granted" else "Role NOT granted",
+                if (granted) R.string.role_granted else R.string.role_not_granted,
                 Toast.LENGTH_SHORT
             ).show()
             refreshStatus()
         }
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        // No language chosen yet (first launch): default to English regardless of the
+        // device's system locale, rather than following it. Once a flag has been tapped,
+        // AppCompatDelegate remembers that choice and this no longer fires.
+        if (AppCompatDelegate.getApplicationLocales().isEmpty) {
+            AppCompatDelegate.setApplicationLocales(LocaleListCompat.forLanguageTags("en"))
+        }
+
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
@@ -88,11 +99,22 @@ class MainActivity : AppCompatActivity() {
             )
         )
 
+        binding.flagSwiss.setOnClickListener { setAppLanguage("ch") }
+        binding.flagGerman.setOnClickListener { setAppLanguage("de") }
+        binding.flagUk.setOnClickListener { setAppLanguage("en") }
+
         binding.btnPickContact.setOnClickListener { launchContactPicker() }
         binding.btnCallScreeningRole.setOnClickListener { requestCallScreeningRole() }
+        binding.btnCallScreeningInfo.setOnClickListener { showCallScreeningInfo() }
         binding.btnDndAccess.setOnClickListener { requestDndAccess() }
         binding.btnMiuiAutostart.setOnClickListener { openMiuiAutostartSettings() }
+        binding.btnAutostartInfo.setOnClickListener { showAutostartInfo() }
         binding.btnMiuiBattery.setOnClickListener { openMiuiBatterySettings() }
+        binding.btnBatteryInfo.setOnClickListener { showBatteryInfo() }
+        binding.btnDnDInfo.setOnClickListener { showDnDInfo() }
+        if (!isMiuiDevice()) {
+            binding.autostartRow.visibility = View.GONE
+        }
         binding.contactsSectionHeader.setOnClickListener {
             contactsExpanded = !contactsExpanded
             applyContactsExpandedState(animate = true)
@@ -118,6 +140,12 @@ class MainActivity : AppCompatActivity() {
         refreshStatus()
     }
 
+    // ---------- Language switching ----------
+
+    private fun setAppLanguage(languageTag: String) {
+        AppCompatDelegate.setApplicationLocales(LocaleListCompat.forLanguageTags(languageTag))
+    }
+
     // ---------- Contact picking ----------
 
     private fun launchContactPicker() {
@@ -141,7 +169,7 @@ class MainActivity : AppCompatActivity() {
         }
 
         if (contactId == null) {
-            Toast.makeText(this, "Could not read contact", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, R.string.could_not_read_contact, Toast.LENGTH_SHORT).show()
             return
         }
 
@@ -160,13 +188,14 @@ class MainActivity : AppCompatActivity() {
         }
 
         if (numbers.isEmpty()) {
-            Toast.makeText(this, "Contact has no phone numbers", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, R.string.contact_no_numbers, Toast.LENGTH_SHORT).show()
             return
         }
 
-        ContactPrefs.addContact(this, displayName ?: "Unknown", numbers)
+        val name = displayName ?: getString(R.string.unknown_contact)
+        ContactPrefs.addContact(this, name, numbers)
         refreshContactList()
-        Toast.makeText(this, "Added: $displayName", Toast.LENGTH_SHORT).show()
+        Toast.makeText(this, getString(R.string.contact_added, name), Toast.LENGTH_SHORT).show()
     }
 
     // ---------- Contact list UI ----------
@@ -263,36 +292,43 @@ class MainActivity : AppCompatActivity() {
 
     private fun resetRingtone() {
         ContactPrefs.setRingtoneUri(this, null)
-        Toast.makeText(this, "Ringtone reset to default", Toast.LENGTH_SHORT).show()
+        Toast.makeText(this, R.string.ringtone_reset, Toast.LENGTH_SHORT).show()
     }
 
     private fun showRingtoneInfo() {
         val uri = ContactPrefs.getRingtoneUri(this)
         val name = if (uri != null) {
-            RingtoneManager.getRingtone(this, uri)?.getTitle(this) ?: "Custom sound"
+            RingtoneManager.getRingtone(this, uri)?.getTitle(this) ?: getString(R.string.custom_sound)
         } else {
-            "Default"
+            getString(R.string.default_sound_label)
         }
         Toast.makeText(this, name, Toast.LENGTH_SHORT).show()
     }
 
     // ---------- Call screening role ----------
 
+    private fun showCallScreeningInfo() {
+        MaterialAlertDialogBuilder(this)
+            .setMessage(R.string.call_detection_info_message)
+            .setPositiveButton(android.R.string.ok, null)
+            .show()
+    }
+
     private fun requestCallScreeningRole() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
             val roleManager = getSystemService(RoleManager::class.java)
             if (roleManager.isRoleAvailable(RoleManager.ROLE_CALL_SCREENING)) {
                 if (roleManager.isRoleHeld(RoleManager.ROLE_CALL_SCREENING)) {
-                    Toast.makeText(this, "Already granted", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this, R.string.already_granted, Toast.LENGTH_SHORT).show()
                     return
                 }
                 val intent = roleManager.createRequestRoleIntent(RoleManager.ROLE_CALL_SCREENING)
                 requestRoleLauncher.launch(intent)
             } else {
-                Toast.makeText(this, "Call screening role not available on this device", Toast.LENGTH_LONG).show()
+                Toast.makeText(this, R.string.call_detection_unavailable, Toast.LENGTH_LONG).show()
             }
         } else {
-            Toast.makeText(this, "Requires Android 10+", Toast.LENGTH_LONG).show()
+            Toast.makeText(this, R.string.requires_android_10, Toast.LENGTH_LONG).show()
         }
     }
 
@@ -301,13 +337,47 @@ class MainActivity : AppCompatActivity() {
     private fun requestDndAccess() {
         val nm = getSystemService(NotificationManager::class.java)
         if (nm.isNotificationPolicyAccessGranted) {
-            Toast.makeText(this, "Already granted", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, R.string.already_granted, Toast.LENGTH_SHORT).show()
             return
         }
         startActivity(Intent(Settings.ACTION_NOTIFICATION_POLICY_ACCESS_SETTINGS))
     }
 
     // ---------- MIUI-specific screens ----------
+
+    private fun showAutostartInfo() {
+        MaterialAlertDialogBuilder(this)
+            .setMessage(R.string.autostart_info_message)
+            .setPositiveButton(android.R.string.ok, null)
+            .show()
+    }
+
+    private fun showBatteryInfo() {
+        MaterialAlertDialogBuilder(this)
+            .setMessage(R.string.battery_info_message)
+            .setPositiveButton(android.R.string.ok, null)
+            .show()
+    }
+
+    private fun showDnDInfo() {
+        MaterialAlertDialogBuilder(this)
+            .setMessage(R.string.dnd_info_message)
+            .setPositiveButton(android.R.string.ok, null)
+            .show()
+    }
+
+    /**
+     * The Autostart step is MIUI/HyperOS-specific — checking for MIUI's own security-center
+     * package
+     */
+    private fun isMiuiDevice(): Boolean {
+        return try {
+            packageManager.getPackageInfo("com.miui.securitycenter", 0)
+            true
+        } catch (e: PackageManager.NameNotFoundException) {
+            false
+        }
+    }
 
     private fun openMiuiAutostartSettings() {
         try {
@@ -319,12 +389,7 @@ class MainActivity : AppCompatActivity() {
             }
             startActivity(intent)
         } catch (e: ActivityNotFoundException) {
-            Toast.makeText(
-                this,
-                "Couldn't open Autostart screen automatically — go to " +
-                    "Security app > Permissions > Autostart and enable this app manually.",
-                Toast.LENGTH_LONG
-            ).show()
+            Toast.makeText(this, R.string.autostart_fallback_message, Toast.LENGTH_LONG).show()
         }
     }
 
@@ -339,11 +404,7 @@ class MainActivity : AppCompatActivity() {
                 data = Uri.parse("package:$packageName")
             }
             startActivity(intent)
-            Toast.makeText(
-                this,
-                "Open Battery saver here and set it to 'No restrictions'.",
-                Toast.LENGTH_LONG
-            ).show()
+            Toast.makeText(this, R.string.battery_fallback_message, Toast.LENGTH_LONG).show()
         }
     }
 
@@ -356,9 +417,12 @@ class MainActivity : AppCompatActivity() {
             getSystemService(RoleManager::class.java).isRoleHeld(RoleManager.ROLE_CALL_SCREENING)
         } else false
 
-        binding.tvStatus.text = "DND access: ${if (dndGranted) "granted" else "NOT granted"}\n" +
-            "Call screening role: ${if (roleGranted) "granted" else "NOT granted"}\n" +
-            "Complete the steps above, in order, then leave the app and " +
-            "test with a real call once done."
+        val grantedText = getString(R.string.status_granted)
+        val notGrantedText = getString(R.string.status_not_granted)
+        binding.tvStatus.text = getString(
+            R.string.status_summary,
+            if (roleGranted) grantedText else notGrantedText,
+            if (dndGranted) grantedText else notGrantedText
+        )
     }
 }
