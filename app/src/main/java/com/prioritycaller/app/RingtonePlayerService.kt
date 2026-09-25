@@ -8,6 +8,7 @@ import android.content.Context
 import android.content.Intent
 import android.content.res.Configuration
 import android.media.AudioAttributes
+import android.media.AudioDeviceInfo
 import android.media.AudioManager
 import android.media.MediaPlayer
 import android.os.Build
@@ -137,6 +138,10 @@ class RingtonePlayerService : Service() {
 
     // ---------- Ringtone playback ----------
 
+    private fun builtinSpeaker(): AudioDeviceInfo? =
+        audioManager?.getDevices(AudioManager.GET_DEVICES_OUTPUTS)
+            ?.firstOrNull { it.type == AudioDeviceInfo.TYPE_BUILTIN_SPEAKER }
+
     private fun startLoopingRingtone() {
         val customUri = ContactPrefs.getRingtoneUri(this)
         val resId = resources.getIdentifier("priority_ringtone", "raw", packageName)
@@ -150,6 +155,19 @@ class RingtonePlayerService : Service() {
             isLooping = true
 
             try {
+                // Force the phone's own loudspeaker regardless of a connected Bluetooth device
+                // (car system, headset): Bluetooth routes have their own independent volume the
+                // STREAM_ALARM max below never touches, and can silently swallow the alert
+                // entirely. Isolated in its own try so a routing failure on some device/OEM
+                // never prevents the ringtone itself from playing.
+                try {
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+                        builtinSpeaker()?.let { setPreferredDevice(it) }
+                    }
+                } catch (e: Exception) {
+                    Log.w(TAG, "Could not force built-in speaker output", e)
+                }
+
                 if (customUri != null) {
                     // User picked a ringtone via the sound picker; that choice wins.
                     setDataSource(applicationContext, customUri)
