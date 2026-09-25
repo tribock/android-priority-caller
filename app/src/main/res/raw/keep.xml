@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+Resource shrinker only tracks statically-referenced resources (R.raw.x in code/XML).
+RingtonePlayerService looks this up dynamically via resources.getIdentifier(), so without
+this keep rule the shrinker marks it unreachable and strips it from release builds.
+-->
+<resources xmlns:tools="http://schemas.android.com/tools"
+    tools:keep="@raw/priority_ringtone" />
