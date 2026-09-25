@@ -6,6 +6,13 @@ An Android app that rings loudly and bypasses Do Not Disturb when one of your
 chosen priority contacts calls — using Android's `CallScreeningService` to detect
 the call and an alarm-stream ringtone to make sure it's heard.
 
+**"Why install this app — doesn't Android already have a built-in DND override?"**
+> That's true, but Priority Caller doesn't just bypass Do Not Disturb — it also forces
+> your ring volume to maximum, so you actually hear the call.
+
+**"I still don't see a benefit in it"**
+> Android's built-in DND exceptions rely on you noticing a silent screen (contact "starred" just skips the mute, it doesn't force volume up) — for someone in another room, asleep, or in a loud environment, silent-but-visible is functionally identical to blocked. The the volume increasing to max feature is what actually solves the reachability problem, not the DND bypass alone.
+
 <br clear="left" />
 
 [![Build & Lint](https://github.com/tribock/android-priority-caller/actions/workflows/build.yml/badge.svg)](https://github.com/tribock/android-priority-caller/actions/workflows/build.yml)
