@@ -161,7 +161,9 @@ class RingtonePlayerService : Service() {
                 // entirely. Isolated in its own try so a routing failure on some device/OEM
                 // never prevents the ringtone itself from playing.
                 try {
-                    builtinSpeaker()?.let { setPreferredDevice(it) }
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+                        builtinSpeaker()?.let { setPreferredDevice(it) }
+                    }
                 } catch (e: Exception) {
                     Log.w(TAG, "Could not force built-in speaker output", e)
                 }
