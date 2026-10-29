@@ -3,6 +3,7 @@ package com.prioritycaller.app
 import android.app.Notification
 import android.app.NotificationChannel
 import android.app.NotificationManager
+import android.app.PendingIntent
 import android.app.Service
 import android.content.Context
 import android.content.Intent
@@ -270,6 +271,17 @@ class RingtonePlayerService : Service() {
             nm.createNotificationChannel(channel)
         }
     }
+    private fun fullScreenPendingIntent(): PendingIntent {
+        val intent = Intent(this, MainActivity::class.java).apply {
+            flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP or
+                Intent.FLAG_ACTIVITY_SINGLE_TOP
+        }
+        return PendingIntent.getActivity(
+            this, 0, intent,
+            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+        )
+    }
+
     private fun buildNotification(): Notification {
         return NotificationCompat.Builder(this, CHANNEL_ID)
             .setContentTitle(getString(R.string.incoming_priority_call_title))
@@ -278,6 +290,10 @@ class RingtonePlayerService : Service() {
             .setPriority(NotificationCompat.PRIORITY_MAX)
             .setCategory(NotificationCompat.CATEGORY_CALL)
             .setOngoing(true)
+            // The actual mechanism that wakes the screen and shows over a lock screen/DND —
+            // without this, the notification is just a heads-up alert, which some OEM lock
+            // screens suppress or delay while the screen is off.
+            .setFullScreenIntent(fullScreenPendingIntent(), true)
             .build()
     }
 }

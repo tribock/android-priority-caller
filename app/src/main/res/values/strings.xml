@@ -11,6 +11,8 @@
     <string name="remove_contact_cd">Remove %1$s</string>
 
     <string name="setup_title">Setup</string>
+    <string name="setup_info_cd">Why is this needed?</string>
+    <string name="setup_info_message">Each step below grants a permission Android requires to detect an incoming call and show it loudly, even with Do Not Disturb on. Skipping any of them means priority calls may ring silently or not show at all — complete them all, in order, for the app to work reliably.</string>
     <string name="step_call_screening">Allow call detection</string>
     <string name="call_detection_info_cd">Why is this needed?</string>
     <string name="call_detection_info_message">This permission sets which app is allowed to screen and identify incoming calls — needed to decide whether to trigger a priority call.</string>
@@ -23,6 +25,9 @@
     <string name="step_miui_battery">Open Battery saver settings</string>
     <string name="dnd_info_message">Allow the app to bypass Do Not Disturb for priority contacts when ringing.</string>
     <string name="dnd_info_cd">Why is this needed?</string>
+    <string name="step_full_screen_intent_access">Allow full-screen notifications</string>
+    <string name="full_screen_intent_info_message">On Android 14 and newer, this permission is required to show the priority call over your lock screen. Without it, Android silently downgrades the alert to a normal notification you could miss.</string>
+    <string name="full_screen_intent_info_cd">Why is this needed?</string>
 
 
     <string name="status_title">Status</string>

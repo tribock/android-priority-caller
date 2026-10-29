@@ -104,9 +104,12 @@ class MainActivity : AppCompatActivity() {
         binding.flagUk.setOnClickListener { setAppLanguage("en") }
 
         binding.btnPickContact.setOnClickListener { launchContactPicker() }
+        binding.btnSetupInfo.setOnClickListener { showSetupInfo() }
         binding.btnCallScreeningRole.setOnClickListener { requestCallScreeningRole() }
         binding.btnCallScreeningInfo.setOnClickListener { showCallScreeningInfo() }
         binding.btnDndAccess.setOnClickListener { requestDndAccess() }
+        binding.btnFullScreenIntentAccess.setOnClickListener { requestFullScreenIntentAccess() }
+        binding.btnFullScreenIntentInfo.setOnClickListener { showFullScreenIntentInfo() }
         binding.btnMiuiAutostart.setOnClickListener { openMiuiAutostartSettings() }
         binding.btnAutostartInfo.setOnClickListener { showAutostartInfo() }
         binding.btnMiuiBattery.setOnClickListener { openMiuiBatterySettings() }
@@ -114,6 +117,11 @@ class MainActivity : AppCompatActivity() {
         binding.btnDnDInfo.setOnClickListener { showDnDInfo() }
         if (!isMiuiDevice()) {
             binding.autostartRow.visibility = View.GONE
+        }
+        // The full-screen-intent permission only exists from Android 14 onward — on older
+        // versions setFullScreenIntent() just works once USE_FULL_SCREEN_INTENT is declared.
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
+            binding.fullScreenIntentRow.visibility = View.GONE
         }
         binding.contactsSectionHeader.setOnClickListener {
             contactsExpanded = !contactsExpanded
@@ -305,6 +313,15 @@ class MainActivity : AppCompatActivity() {
         Toast.makeText(this, name, Toast.LENGTH_SHORT).show()
     }
 
+    // ---------- Setup ----------
+
+    private fun showSetupInfo() {
+        MaterialAlertDialogBuilder(this)
+            .setMessage(R.string.setup_info_message)
+            .setPositiveButton(android.R.string.ok, null)
+            .show()
+    }
+
     // ---------- Call screening role ----------
 
     private fun showCallScreeningInfo() {
@@ -341,6 +358,28 @@ class MainActivity : AppCompatActivity() {
             return
         }
         startActivity(Intent(Settings.ACTION_NOTIFICATION_POLICY_ACCESS_SETTINGS))
+    }
+
+    // ---------- Full-screen intent permission (Android 14+) ----------
+
+    private fun requestFullScreenIntentAccess() {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.UPSIDE_DOWN_CAKE) return
+        val nm = getSystemService(NotificationManager::class.java)
+        if (nm.canUseFullScreenIntent()) {
+            Toast.makeText(this, R.string.already_granted, Toast.LENGTH_SHORT).show()
+            return
+        }
+        val intent = Intent(Settings.ACTION_MANAGE_APP_USE_FULL_SCREEN_INTENT).apply {
+            data = Uri.parse("package:$packageName")
+        }
+        startActivity(intent)
+    }
+
+    private fun showFullScreenIntentInfo() {
+        MaterialAlertDialogBuilder(this)
+            .setMessage(R.string.full_screen_intent_info_message)
+            .setPositiveButton(android.R.string.ok, null)
+            .show()
     }
 
     // ---------- MIUI-specific screens ----------

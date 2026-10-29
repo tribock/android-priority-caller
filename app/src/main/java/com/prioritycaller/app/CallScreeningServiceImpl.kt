@@ -20,9 +20,13 @@ class CallScreeningServiceImpl : CallScreeningService() {
 
     override fun onScreenCall(callDetails: Call.Details) {
         val number = callDetails.handle?.schemeSpecificPart
-        Log.d(TAG, "onScreenCall: number=$number enabled=${ContactPrefs.isEnabled(this)}")
+        // Holding the CALL_SCREENING role (API 29+ only, see MainActivity) makes onScreenCall
+        // fire for outgoing calls too, not just incoming ones — without this check, calling a
+        // priority contact yourself triggered the same loud alarm as them calling you.
+        val isIncoming = callDetails.callDirection == Call.Details.DIRECTION_INCOMING
+        Log.d(TAG, "onScreenCall: number=$number direction=${callDetails.callDirection} enabled=${ContactPrefs.isEnabled(this)}")
 
-        if (ContactPrefs.isEnabled(this )) {
+        if (isIncoming && ContactPrefs.isEnabled(this )) {
             val matchedContact = ContactPrefs.getAllContacts(applicationContext)
                 .firstOrNull { contact ->
                     contact.numbers.any { saved ->

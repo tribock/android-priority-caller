@@ -11,6 +11,8 @@
     <string name="remove_contact_cd">%1$s entfernä</string>
 
     <string name="setup_title">Ihrichtä</string>
+    <string name="setup_info_cd">Warum wird das benötigt?</string>
+    <string name="setup_info_message">Jede Schritt unedra erteilt ä Berechtigung, wo Android bruucht, zum än igehende Aaruf z\'erkenne und luut aazeige — au bi aktivem \'Nicht stören\'. Wird eine devo übersprunge, chönd Prioritätsaarüef lutlos klingle oder gar nid aazeigt wärde. Schlüss alli Schritt dr Reihe noh ab, damit d\'App zueverlässig funktioniert.</string>
     <string name="step_call_screening">Anruferkännig erlaubä</string>
     <string name="call_detection_info_cd">Warum wird das benötigt?</string>
     <string name="call_detection_info_message">Die Berechtigung legt fest, welli App igehendi Anrufe prüfen und identifizieren darf — notwendig, um zu entscheiden, ob ein Prioritätsanruf ausgelöst werden soll.</string>
@@ -23,6 +25,9 @@
     <string name="step_miui_battery">Akkusparä-Istellige öffnen</string>
     <string name="dnd_info_message">Erlaubt der App, für Die wichtigschde Kontäkte beim Klingeln den \'Nicht stören\'-Modus zu umgehen.</string>
     <string name="dnd_info_cd">Warum wird das benötigt?</string>
+    <string name="step_full_screen_intent_access">Vollbildbenachrichtige erlaube</string>
+    <string name="full_screen_intent_info_message">Ab Android 14 bruucht\'s die Berechtigung, damit de Prioritätsaaruf über dim Sperrbildschirm aazeigt wird. Ohni die stuft Android d\'Benachrichtigung eifach zu re normale Benachrichtigung ab, wo du verpasse chasch.</string>
+    <string name="full_screen_intent_info_cd">Warum wird das benötigt?</string>
 
     <string name="status_title">Status</string>
     <string name="show_selected_priority_sound">Ausgewählten Prioritätston anzeigen</string>

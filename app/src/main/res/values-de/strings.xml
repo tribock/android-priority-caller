@@ -11,6 +11,8 @@
     <string name="remove_contact_cd">%1$s entfernen</string>
 
     <string name="setup_title">Einrichtung</string>
+    <string name="setup_info_cd">Warum wird das benötigt?</string>
+    <string name="setup_info_message">Jeder Schritt unten erteilt eine Berechtigung, die Android benötigt, um einen eingehenden Anruf zu erkennen und laut anzuzeigen — auch bei aktivem \'Nicht stören\'. Wird einer davon übersprungen, können Prioritätsanrufe stumm klingeln oder gar nicht angezeigt werden. Schliesse alle Schritte der Reihe nach ab, damit die App zuverlässig funktioniert.</string>
     <string name="step_call_screening">Anruferkennung erlauben</string>
     <string name="call_detection_info_cd">Warum wird das benötigt?</string>
     <string name="call_detection_info_message">Diese Berechtigung legt fest, welche App eingehende Anrufe prüfen und identifizieren darf — notwendig, um zu entscheiden, ob ein Prioritätsanruf ausgelöst werden soll.</string>
@@ -23,6 +25,9 @@
     <string name="step_miui_battery">Akkusparen-Einstellungen öffnen</string>
     <string name="dnd_info_message">Erlaubt der App, für Prioritätskontakte beim Klingeln den \'Nicht stören\'-Modus zu umgehen.</string>
     <string name="dnd_info_cd">Warum wird das benötigt?</string>
+    <string name="step_full_screen_intent_access">Vollbildbenachrichtigungen erlauben</string>
+    <string name="full_screen_intent_info_message">Ab Android 14 wird diese Berechtigung benötigt, damit der Prioritätsanruf über deinen Sperrbildschirm angezeigt werden kann. Ohne sie stuft Android die Benachrichtigung stillschweigend zu einer normalen Benachrichtigung herab, die du verpassen könntest.</string>
+    <string name="full_screen_intent_info_cd">Warum wird das benötigt?</string>
 
     <string name="status_title">Status</string>
     <string name="show_selected_priority_sound">Ausgewählten Prioritätston anzeigen</string>

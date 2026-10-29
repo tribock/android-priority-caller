@@ -301,14 +301,31 @@
 
 
 
-            <TextView
-                android:layout_width="wrap_content"
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="14dp"
-                android:text="@string/setup_title"
-                android:textSize="17sp"
-                android:textStyle="bold"
-                android:textColor="?attr/colorOnSurface" />
+                android:orientation="horizontal"
+                android:gravity="center_vertical">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="@string/setup_title"
+                    android:textSize="17sp"
+                    android:textStyle="bold"
+                    android:textColor="?attr/colorOnSurface" />
+
+                <ImageButton
+                    android:id="@+id/btnSetupInfo"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:background="?attr/selectableItemBackgroundBorderless"
+                    android:src="@android:drawable/ic_dialog_info"
+                    android:contentDescription="@string/setup_info_cd"
+                    app:tint="?attr/colorOnSurfaceVariant" />
+            </LinearLayout>
 
 
 
@@ -362,6 +379,32 @@
                                 android:background="?attr/selectableItemBackgroundBorderless"
                                 android:src="@android:drawable/ic_dialog_info"
                                 android:contentDescription="@string/dnd_info_cd"
+                                app:tint="?attr/colorOnSurfaceVariant" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/fullScreenIntentRow"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical">
+
+                            <com.google.android.material.button.MaterialButton
+                                android:id="@+id/btnFullScreenIntentAccess"
+                                style="@style/Widget.Material3.Button.OutlinedButton"
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:text="@string/step_full_screen_intent_access" />
+                            <ImageButton
+                                android:id="@+id/btnFullScreenIntentInfo"
+                                android:layout_width="40dp"
+                                android:layout_height="40dp"
+                                android:layout_marginStart="4dp"
+                                android:background="?attr/selectableItemBackgroundBorderless"
+                                android:src="@android:drawable/ic_dialog_info"
+                                android:contentDescription="@string/full_screen_intent_info_cd"
                                 app:tint="?attr/colorOnSurfaceVariant" />
                     </LinearLayout>
 
