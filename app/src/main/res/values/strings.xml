@@ -25,9 +25,6 @@
     <string name="step_miui_battery">Open Battery saver settings</string>
     <string name="dnd_info_message">Allow the app to bypass Do Not Disturb for priority contacts when ringing.</string>
     <string name="dnd_info_cd">Why is this needed?</string>
-    <string name="step_full_screen_intent_access">Allow full-screen notifications</string>
-    <string name="full_screen_intent_info_message">On Android 14 and newer, this permission is required to show the priority call over your lock screen. Without it, Android silently downgrades the alert to a normal notification you could miss.</string>
-    <string name="full_screen_intent_info_cd">Why is this needed?</string>
 
 
     <string name="status_title">Status</string>

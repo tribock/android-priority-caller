@@ -15,3 +15,14 @@ Priority Caller – dein digitaler Meldeempfänger fürs Handy
 Wer im Pikett steht, kennt das Problem: Das Handy liegt auf lautlos, weil man nicht bei jedem Anruf geweckt werden will – und genau dann kommt die Alarmierung, die man verpasst. Priority Caller löst genau das: Du hinterlegst die Nummer der Alarmzentrale oder deiner Kolleg:innen als Priority-Kontakt, und sobald der Anruf reinkommt, wird er lautstark durchgestellt – auch bei aktivem "Nicht stören", auch auf lautlos. Kein Piepser mehr nötig, keine verpasste Alarmdepesche, kein Umweg über eine zweite Alarmierungs-App.
 
 Die App macht sonst nichts. Kein Tracking, kein Account, keine Cloud – die Kontaktliste bleibt lokal auf dem Gerät, so wie es sich für ein Werkzeug gehört, dem man im Ernstfall vertrauen muss.
+
+## Release notes
+
+### en-GB / en-US
+
+Fixes:
+• The alert no longer triggers when you call a priority contact yourself — only when they call you.
+• Priority calls now reliably break through the lock screen on Android 14, with a new one-time permission step if needed.
+• Priority calls are now routed through your phone's own speaker, so a connected Bluetooth device can't silence them.
+
+Also added a short explanation on the Setup screen for why each step matters.

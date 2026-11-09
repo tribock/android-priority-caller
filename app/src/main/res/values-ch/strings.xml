@@ -25,9 +25,6 @@
     <string name="step_miui_battery">Akkusparä-Istellige öffnen</string>
     <string name="dnd_info_message">Erlaubt der App, für Die wichtigschde Kontäkte beim Klingeln den \'Nicht stören\'-Modus zu umgehen.</string>
     <string name="dnd_info_cd">Warum wird das benötigt?</string>
-    <string name="step_full_screen_intent_access">Vollbildbenachrichtige erlaube</string>
-    <string name="full_screen_intent_info_message">Ab Android 14 bruucht\'s die Berechtigung, damit de Prioritätsaaruf über dim Sperrbildschirm aazeigt wird. Ohni die stuft Android d\'Benachrichtigung eifach zu re normale Benachrichtigung ab, wo du verpasse chasch.</string>
-    <string name="full_screen_intent_info_cd">Warum wird das benötigt?</string>
 
     <string name="status_title">Status</string>
     <string name="show_selected_priority_sound">Ausgewählten Prioritätston anzeigen</string>
